@@ -1,0 +1,810 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>High Performing Teams Assessment — DGC</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;600;700;800;900&family=Open+Sans:wght@400;500;600&display=swap" rel="stylesheet">
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.1/chart.umd.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/@emailjs/browser@3/dist/email.min.js"></script>
+  <style>
+    *{box-sizing:border-box;margin:0;padding:0}
+    :root{
+      --cobalt:#3D6AB5;--cobalt-dark:#2A4E8C;--cobalt-light:#5584D4;
+      --yellow:#F5C842;--navy:#0D1525;--navy-mid:#1A2744;
+      --white:#FFFFFF;--offwhite:#F2F5FB;--surface:#E8EDF7;--border:#C8D3E8;
+      --text-primary:#0D1525;--text-secondary:#384565;--text-muted:#5A6882;
+      --success-bg:#D1FAE5;--success-text:#064E32;
+      --warn-bg:#FEF3C7;--warn-text:#7A4500;
+      --danger-bg:#FEE2E2;--danger-text:#7F1D1D;
+      --info-bg:#DBEAFE;--info-text:#1E3A6E;
+    }
+    body{font-family:'Open Sans',sans-serif;background:var(--offwhite);color:var(--text-primary);font-size:15px;line-height:1.6;min-height:100vh}
+    .app{max-width:940px;margin:0 auto;padding-bottom:5rem}
+    .header{background:var(--navy);position:relative;overflow:hidden}
+    .header-topbar{height:5px;background:var(--cobalt)}
+    .header-inner{padding:2rem 2.5rem 2.25rem;position:relative;z-index:2}
+    .hd1{position:absolute;right:-50px;top:-50px;width:220px;height:220px;border:44px solid rgba(61,106,181,0.1);border-radius:50%}
+    .hd2{position:absolute;right:100px;bottom:-70px;width:140px;height:140px;border:28px solid rgba(245,200,66,0.07);border-radius:50%}
+    .brand-row{display:flex;align-items:center;gap:14px;margin-bottom:1.75rem}
+    .dgc-mark{width:48px;height:48px;flex-shrink:0}
+    .brand-name{font-family:'Montserrat',sans-serif;font-weight:900;font-size:14px;color:var(--cobalt-light);letter-spacing:3.5px}
+    .brand-sub{font-size:11px;color:rgba(255,255,255,0.6);letter-spacing:0.8px;font-weight:500}
+    .hdr-title{font-family:'Montserrat',sans-serif;font-weight:900;font-size:1.95rem;color:var(--white);line-height:1.08;margin-bottom:0.45rem}
+    .hdr-title .accent{color:var(--yellow)}
+    .hdr-desc{font-size:14px;color:#FFFFFF;font-weight:500;max-width:540px;line-height:1.7;margin-bottom:1.5rem}
+    .header-meta-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:10px;margin-bottom:1.5rem}
+    .header-meta-card{background:rgba(255,255,255,0.08);border:1px solid rgba(255,255,255,0.15);border-radius:10px;padding:0.85rem 1rem;text-align:center}
+    .hmc-val{font-family:'Montserrat',sans-serif;font-weight:900;font-size:1.3rem;color:var(--yellow);line-height:1}
+    .hmc-lbl{font-size:11px;color:rgba(255,255,255,0.75);font-weight:600;margin-top:4px;letter-spacing:0.3px}
+    .citation{font-size:12px;color:rgba(255,255,255,0.6);line-height:1.65;padding-top:1.25rem;border-top:1px solid rgba(255,255,255,0.1);font-style:italic}
+    .nav{background:var(--navy-mid);border-bottom:3px solid var(--cobalt);display:flex;padding:0 2rem;position:sticky;top:0;z-index:100;overflow-x:auto}
+    .nav-tab{padding:0.9rem 1.25rem;font-size:11px;font-weight:700;font-family:'Montserrat',sans-serif;color:rgba(255,255,255,0.45);border:none;background:none;cursor:pointer;border-bottom:3px solid transparent;margin-bottom:-3px;transition:all 0.2s;white-space:nowrap;letter-spacing:0.8px;text-transform:uppercase}
+    .nav-tab.active{color:var(--white);border-bottom-color:var(--yellow)}
+    .nav-tab:hover:not(.active){color:rgba(255,255,255,0.75)}
+    .nav-tab:focus{outline:3px solid var(--yellow);outline-offset:2px}
+    .panel{display:none;padding:2rem}
+    .panel.active{display:block}
+    .card{background:var(--white);border:1px solid var(--border);border-radius:12px;padding:1.75rem;margin-bottom:1.25rem}
+    .card-head{display:flex;align-items:center;gap:10px;margin-bottom:1.25rem}
+    .card-rule{width:4px;height:20px;background:var(--cobalt);border-radius:2px;flex-shrink:0}
+    .card-head h3{font-family:'Montserrat',sans-serif;font-weight:700;font-size:14px;color:var(--text-primary)}
+    .form-grid{display:grid;grid-template-columns:1fr 1fr;gap:1rem}
+    .fg{display:flex;flex-direction:column;gap:6px}
+    .fg label{font-size:11px;font-weight:700;color:var(--text-muted);text-transform:uppercase;letter-spacing:0.8px}
+    .fg input,.fg select{padding:11px 14px;border:2px solid var(--border);border-radius:8px;font-size:14px;font-family:'Open Sans',sans-serif;color:var(--text-primary);background:var(--offwhite);transition:border 0.2s,box-shadow 0.2s}
+    .fg input:focus,.fg select:focus{outline:none;border-color:var(--cobalt);box-shadow:0 0 0 3px rgba(61,106,181,0.2);background:white}
+    .role-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:8px;margin-top:0.25rem}
+    .role-btn{padding:11px 8px;border:2px solid var(--border);border-radius:8px;font-size:12px;font-weight:700;font-family:'Montserrat',sans-serif;cursor:pointer;background:white;color:var(--text-muted);transition:all 0.2s;text-align:center}
+    .role-btn:hover{border-color:var(--cobalt);color:var(--cobalt)}
+    .role-btn.selected{background:var(--navy);color:white;border-color:var(--navy)}
+    .btn-primary{background:var(--cobalt);color:white;border:2px solid var(--cobalt);padding:12px 28px;border-radius:8px;font-size:13px;font-weight:700;font-family:'Montserrat',sans-serif;cursor:pointer;transition:all 0.2s;letter-spacing:0.5px}
+    .btn-primary:hover{background:var(--cobalt-dark)}
+    .btn-primary:focus{outline:3px solid var(--yellow);outline-offset:3px}
+    .btn-outline{background:white;color:var(--text-primary);border:2px solid var(--border);padding:11px 22px;border-radius:8px;font-size:13px;font-weight:700;font-family:'Montserrat',sans-serif;cursor:pointer;transition:all 0.2s}
+    .btn-outline:hover{border-color:var(--cobalt);color:var(--cobalt)}
+    .btn-yellow{background:var(--yellow);color:var(--navy);border:2px solid var(--yellow);padding:12px 28px;border-radius:8px;font-size:13px;font-weight:700;font-family:'Montserrat',sans-serif;cursor:pointer;transition:all 0.2s}
+    .btn-yellow:hover{background:#E0B530}
+    .prog-bar-wrap{background:var(--navy);border-radius:12px;padding:1.25rem 1.75rem;margin-bottom:1.25rem;display:flex;align-items:center;gap:1.25rem}
+    .prog-lbl{font-family:'Montserrat',sans-serif;font-size:12px;font-weight:700;color:white;white-space:nowrap;min-width:110px}
+    .prog-track{flex:1;height:6px;background:rgba(255,255,255,0.12);border-radius:3px;overflow:hidden}
+    .prog-fill{height:100%;background:var(--yellow);border-radius:3px;transition:width 0.4s ease}
+    .prog-pct{font-size:12px;color:rgba(255,255,255,0.5);white-space:nowrap;min-width:70px;text-align:right}
+    .dim-block{background:white;border:1px solid var(--border);border-radius:12px;margin-bottom:1.25rem;overflow:hidden}
+    .dim-hdr{background:var(--navy);padding:1.25rem 1.75rem;display:flex;align-items:flex-start;gap:14px}
+    .dim-badge{background:var(--cobalt);color:white;font-family:'Montserrat',sans-serif;font-weight:800;font-size:10px;padding:5px 10px;border-radius:6px;letter-spacing:1px;flex-shrink:0;margin-top:2px}
+    .dim-badge.pre{background:var(--yellow);color:var(--navy)}
+    .dim-hdr h3{font-family:'Montserrat',sans-serif;font-weight:700;font-size:15px;color:white;line-height:1.2}
+    .dim-hdr p{font-size:12px;color:rgba(255,255,255,0.6);margin-top:3px}
+    .scale-leg{display:flex;justify-content:space-between;padding:0.65rem 1.75rem;background:var(--surface);border-bottom:1px solid var(--border);font-size:11px;color:var(--text-muted);font-weight:600;font-family:'Montserrat',sans-serif;gap:4px;flex-wrap:wrap}
+    .items-list{padding:0}
+    .item-row{padding:1.2rem 1.75rem;border-bottom:1px solid var(--border);display:grid;grid-template-columns:1fr auto;gap:1.25rem;align-items:center}
+    .item-row:last-child{border-bottom:none}
+    .item-text{font-size:14px;color:var(--text-primary);line-height:1.55}
+    .item-meta{font-size:11px;color:var(--text-muted);margin-top:4px;font-weight:600;font-family:'Montserrat',sans-serif}
+    .likert{display:flex;gap:5px}
+    .lbtn{width:40px;height:40px;border-radius:8px;border:2px solid var(--border);background:var(--offwhite);cursor:pointer;font-size:13px;font-weight:700;font-family:'Montserrat',sans-serif;color:var(--text-muted);transition:all 0.15s;display:flex;align-items:center;justify-content:center;flex-shrink:0}
+    .lbtn:hover{border-color:var(--cobalt);color:var(--cobalt);background:rgba(61,106,181,0.06)}
+    .lbtn.sel{background:var(--cobalt);border-color:var(--cobalt);color:white}
+    .survey-nav{display:flex;justify-content:space-between;align-items:center;padding:1.5rem 0 0}
+    .scale-hint{font-size:12px;color:var(--text-muted);text-align:center;font-weight:500}
+    /* TEASER RESULT */
+    .teaser-wrap{padding:2rem}
+    .teaser-banner{background:var(--navy);border-radius:12px;padding:2.5rem 2rem;margin-bottom:1.25rem;text-align:center;position:relative;overflow:hidden}
+    .teaser-banner::before{content:'';position:absolute;right:-40px;top:-40px;width:180px;height:180px;border:36px solid rgba(61,106,181,0.12);border-radius:50%}
+    .teaser-banner h2{font-family:'Montserrat',sans-serif;font-weight:900;font-size:1.4rem;color:white;margin-bottom:0.5rem;position:relative;z-index:2}
+    .teaser-banner p{font-size:13px;color:rgba(255,255,255,0.55);margin-bottom:1.5rem;position:relative;z-index:2}
+    .overall-ring{width:120px;height:120px;border-radius:50%;border:4px solid var(--yellow);display:flex;flex-direction:column;align-items:center;justify-content:center;margin:0 auto 1.5rem;background:rgba(245,200,66,0.06);position:relative;z-index:2}
+    .overall-ring .big{font-family:'Montserrat',sans-serif;font-size:34px;font-weight:900;color:white;line-height:1}
+    .overall-ring .sm{font-size:11px;color:rgba(255,255,255,0.5);margin-top:2px;font-weight:600}
+    .traffic-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:10px;margin-bottom:1.5rem;position:relative;z-index:2}
+    .traffic-box{border-radius:10px;padding:1rem;text-align:center}
+    .traffic-box .tv{font-family:'Montserrat',sans-serif;font-size:28px;font-weight:900;line-height:1}
+    .traffic-box .tl{font-size:11px;font-weight:700;margin-top:4px;text-transform:uppercase;letter-spacing:0.5px}
+    .t-green{background:rgba(29,185,84,0.15);border:1px solid rgba(29,185,84,0.3)}.t-green .tv,.t-green .tl{color:#1DB954}
+    .t-amber{background:rgba(245,200,66,0.12);border:1px solid rgba(245,200,66,0.3)}.t-amber .tv,.t-amber .tl{color:var(--yellow)}
+    .t-red{background:rgba(185,28,28,0.15);border:1px solid rgba(185,28,28,0.3)}.t-red .tv,.t-red .tl{color:#EF4444}
+    .teaser-cta{background:white;border-radius:12px;padding:2rem;text-align:center;margin-bottom:1.25rem}
+    .teaser-cta h3{font-family:'Montserrat',sans-serif;font-weight:800;font-size:1.1rem;color:var(--navy);margin-bottom:0.75rem}
+    .teaser-cta p{font-size:14px;color:var(--text-secondary);line-height:1.7;margin-bottom:1.5rem;max-width:500px;margin-left:auto;margin-right:auto}
+    .teaser-cta .btn-primary{font-size:14px;padding:14px 36px}
+    .locked-msg{background:var(--surface);border:1px solid var(--border);border-radius:10px;padding:1.25rem;text-align:center;margin-bottom:1rem}
+    .locked-msg p{font-size:13px;color:var(--text-muted);line-height:1.6}
+    .locked-icon{font-size:24px;margin-bottom:8px}
+    /* FULL REPORT */
+    .report-banner{background:var(--navy);border-radius:12px;padding:2rem 2.25rem 1.75rem;margin-bottom:1.25rem;position:relative;overflow:hidden}
+    .rb-deco{position:absolute;right:-40px;top:-40px;width:180px;height:180px;border:36px solid rgba(61,106,181,0.12);border-radius:50%}
+    .rb-top{display:flex;justify-content:space-between;align-items:flex-start;margin-bottom:1.25rem;position:relative;z-index:2}
+    .rb-top h2{font-family:'Montserrat',sans-serif;font-weight:900;font-size:1.5rem;color:white;margin-bottom:4px}
+    .rb-top p{font-size:12px;color:rgba(255,255,255,0.6)}
+    .score-ring{width:84px;height:84px;border-radius:50%;border:3px solid var(--yellow);display:flex;flex-direction:column;align-items:center;justify-content:center;flex-shrink:0;background:rgba(245,200,66,0.06)}
+    .score-ring .big{font-family:'Montserrat',sans-serif;font-size:26px;font-weight:900;color:white;line-height:1}
+    .score-ring .sm{font-size:10px;color:rgba(255,255,255,0.55);margin-top:2px;font-weight:600;font-family:'Montserrat',sans-serif}
+    .rb-chips{display:flex;gap:8px;flex-wrap:wrap;position:relative;z-index:2}
+    .r-chip{background:rgba(61,106,181,0.22);border:1px solid rgba(61,106,181,0.4);color:#A8C3F0;font-size:10px;font-weight:700;font-family:'Montserrat',sans-serif;padding:3px 10px;border-radius:20px;letter-spacing:0.5px}
+    .results-grid{display:grid;grid-template-columns:1fr 1fr;gap:1.25rem;margin-bottom:1.25rem}
+    .result-card{background:white;border:1px solid var(--border);border-radius:12px;padding:1.5rem}
+    .result-card h4{font-family:'Montserrat',sans-serif;font-size:10px;font-weight:700;color:var(--text-muted);text-transform:uppercase;letter-spacing:1.2px;margin-bottom:1rem}
+    .dim-row{display:flex;align-items:center;gap:8px;margin-bottom:8px}
+    .dim-row-name{font-size:12px;color:var(--text-primary);flex:1;line-height:1.25;font-weight:500}
+    .dim-track{width:65px;height:5px;background:var(--surface);border-radius:3px;overflow:hidden;flex-shrink:0}
+    .dim-fill{height:100%;border-radius:3px;transition:width 0.7s ease}
+    .fill-hi{background:var(--success-text)}.fill-mid{background:var(--cobalt)}.fill-lo{background:#B91C1C}
+    .dim-val{font-family:'Montserrat',sans-serif;font-size:12px;font-weight:700;color:var(--text-primary);min-width:26px;text-align:right;flex-shrink:0}
+    .full-w{grid-column:1/-1}
+    .chart-wrap{position:relative;width:100%;height:320px}
+    .toggle-row{display:flex;gap:6px;margin-bottom:1rem}
+    .toggle-btn{padding:5px 14px;border-radius:20px;border:2px solid var(--border);font-size:11px;font-weight:700;font-family:'Montserrat',sans-serif;cursor:pointer;background:white;color:var(--text-muted);transition:all 0.2s}
+    .toggle-btn.on{background:var(--navy);color:white;border-color:var(--navy)}
+    .ai-card{background:white;border:1px solid var(--border);border-radius:12px;padding:1.75rem;margin-bottom:1.25rem}
+    .ai-card-head{display:flex;align-items:center;gap:10px;margin-bottom:1.25rem}
+    .ai-card-head h4{font-family:'Montserrat',sans-serif;font-size:10px;font-weight:700;color:var(--text-muted);text-transform:uppercase;letter-spacing:1.2px}
+    .pill-ai{background:var(--info-bg);color:var(--info-text);font-size:10px;font-weight:700;font-family:'Montserrat',sans-serif;padding:2px 8px;border-radius:4px}
+    .pill-dgc{background:var(--navy);color:#A8C3F0;font-size:10px;font-weight:700;font-family:'Montserrat',sans-serif;padding:2px 8px;border-radius:4px}
+    .pill-yr{background:var(--yellow);color:var(--navy);font-size:10px;font-weight:700;font-family:'Montserrat',sans-serif;padding:2px 8px;border-radius:4px}
+    .narr-body{font-size:14px;line-height:1.85;color:var(--text-secondary)}
+    .narr-body p{margin-bottom:1rem}
+    .loading-dots{display:inline-flex;gap:4px;align-items:center}
+    .loading-dots span{width:7px;height:7px;border-radius:50%;background:var(--cobalt);animation:db 1.2s infinite}
+    .loading-dots span:nth-child(2){animation-delay:0.2s}
+    .loading-dots span:nth-child(3){animation-delay:0.4s}
+    @keyframes db{0%,80%,100%{transform:scale(0.5);opacity:0.3}40%{transform:scale(1);opacity:1}}
+    .rec-item{display:flex;gap:14px;margin-bottom:1.25rem;padding-bottom:1.25rem;border-bottom:1px solid var(--border)}
+    .rec-item:last-child{border-bottom:none;margin-bottom:0;padding-bottom:0}
+    .rec-pri{font-size:10px;font-weight:700;font-family:'Montserrat',sans-serif;padding:4px 10px;border-radius:5px;height:fit-content;flex-shrink:0;letter-spacing:0.5px;white-space:nowrap}
+    .p-high{background:var(--danger-bg);color:var(--danger-text)}.p-med{background:var(--warn-bg);color:var(--warn-text)}.p-str{background:var(--success-bg);color:var(--success-text)}
+    .rec-body h5{font-family:'Montserrat',sans-serif;font-size:14px;font-weight:700;color:var(--text-primary);margin-bottom:4px}
+    .rec-body p{font-size:13px;color:var(--text-secondary);line-height:1.65}
+    .bench-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:10px;margin-top:1rem}
+    .bench-box{text-align:center;padding:1.25rem 1rem;background:var(--offwhite);border-radius:10px;border:1px solid var(--border)}
+    .bench-box .bv{font-family:'Montserrat',sans-serif;font-size:26px;font-weight:900;color:var(--navy)}
+    .bench-box .bl{font-size:10px;color:var(--text-muted);margin-top:3px;font-weight:700;text-transform:uppercase;letter-spacing:0.8px;font-family:'Montserrat',sans-serif}
+    .bench-box .bc{font-size:12px;font-weight:700;margin-top:6px;font-family:'Montserrat',sans-serif}
+    .c-above{color:var(--success-text)}.c-below{color:#B91C1C}.c-at{color:var(--warn-text)}
+    /* FACILITATOR VIEW */
+    .fac-lock{background:var(--navy);border-radius:12px;padding:2rem;text-align:center;margin:2rem}
+    .fac-lock h3{font-family:'Montserrat',sans-serif;font-weight:800;font-size:1.1rem;color:white;margin-bottom:0.5rem}
+    .fac-lock p{font-size:13px;color:rgba(255,255,255,0.55);margin-bottom:1.25rem;line-height:1.6}
+    .fac-lock-row{display:flex;gap:8px;max-width:360px;margin:0 auto}
+    .fac-lock-row input{flex:1;padding:10px 14px;border:2px solid rgba(255,255,255,0.15);border-radius:8px;font-size:14px;font-family:'Open Sans',sans-serif;background:rgba(255,255,255,0.08);color:white}
+    .fac-lock-row input::placeholder{color:rgba(255,255,255,0.3)}
+    .fac-lock-row input:focus{outline:none;border-color:var(--yellow)}
+    .fac-lock-err{font-size:12px;color:#EF4444;margin-top:8px}
+    .fac-input-card{background:white;border-radius:12px;padding:1.75rem;margin-bottom:1.25rem}
+    .fac-input-card h4{font-family:'Montserrat',sans-serif;font-size:11px;font-weight:700;color:var(--text-muted);text-transform:uppercase;letter-spacing:1px;margin-bottom:1rem}
+    .fac-grid{display:grid;grid-template-columns:repeat(2,1fr);gap:10px}
+    .fac-item{display:flex;flex-direction:column;gap:4px}
+    .fac-item label{font-size:11px;font-weight:600;color:var(--text-muted)}
+    .fac-item input{padding:8px 10px;border:1.5px solid var(--border);border-radius:6px;font-size:13px;font-family:'Open Sans',sans-serif;color:var(--text-primary);background:var(--offwhite);width:100%}
+    .fac-item input:focus{outline:none;border-color:var(--cobalt)}
+    .cite-strip{background:var(--navy);border-radius:10px;padding:1rem 1.5rem;margin-bottom:1.25rem}
+    .cite-strip .cite-label{font-family:'Montserrat',sans-serif;font-size:10px;font-weight:700;color:var(--yellow);text-transform:uppercase;letter-spacing:1px;display:block;margin-bottom:4px}
+    .cite-strip .cite-text{font-size:11px;color:rgba(255,255,255,0.5);line-height:1.7;font-style:italic}
+    .cite-strip a{color:rgba(255,255,255,0.65);text-decoration:underline;font-style:normal}
+    .purpose-card{background:var(--navy);border-radius:12px;padding:2rem 2.25rem;margin-bottom:1.25rem;position:relative;overflow:hidden}
+    .purpose-card::before{content:'';position:absolute;right:-40px;top:-40px;width:160px;height:160px;border:32px solid rgba(61,106,181,0.15);border-radius:50%}
+    .purpose-card::after{content:'';position:absolute;left:60%;bottom:-50px;width:110px;height:110px;border:22px solid rgba(245,200,66,0.08);border-radius:50%}
+    .purpose-card h2{font-family:'Montserrat',sans-serif;font-weight:800;font-size:1.15rem;color:var(--white);margin-bottom:0.85rem;position:relative;z-index:2}
+    .purpose-card h2 span{color:var(--yellow)}
+    .purpose-lead{font-size:14px;color:rgba(255,255,255,0.9);line-height:1.75;margin-bottom:1.25rem;position:relative;z-index:2}
+    .purpose-cols{display:grid;grid-template-columns:1fr 1fr;gap:1rem;position:relative;z-index:2}
+    .purpose-col{background:rgba(255,255,255,0.06);border:1px solid rgba(255,255,255,0.1);border-radius:10px;padding:1.1rem 1.25rem}
+    .purpose-col h4{font-family:'Montserrat',sans-serif;font-size:11px;font-weight:700;color:var(--yellow);text-transform:uppercase;letter-spacing:1px;margin-bottom:0.65rem}
+    .purpose-col ul{list-style:none;padding:0}
+    .purpose-col ul li{font-size:13px;color:rgba(255,255,255,0.8);line-height:1.55;padding:0.3rem 0;padding-left:1.1rem;position:relative}
+    .purpose-col ul li::before{content:'→';position:absolute;left:0;color:var(--cobalt-light);font-size:11px;top:0.35rem}
+    .email-status{text-align:center;padding:0.75rem;border-radius:8px;font-size:13px;font-weight:600;font-family:'Montserrat',sans-serif;margin-top:1rem;display:none}
+    .email-ok{background:var(--success-bg);color:var(--success-text)}
+    .email-fail{background:var(--danger-bg);color:var(--danger-text)}
+    @media(max-width:640px){
+      .results-grid,.fac-grid,.purpose-cols{grid-template-columns:1fr}
+      .form-grid{grid-template-columns:1fr}
+      .role-grid{grid-template-columns:1fr 1fr}
+      .hdr-title{font-size:1.5rem}
+      .header-meta-grid{grid-template-columns:repeat(2,1fr)}
+      .item-row{grid-template-columns:1fr;gap:0.75rem}
+      .scale-leg{display:none}
+      .traffic-grid{grid-template-columns:repeat(3,1fr)}
+    }
+  </style>
+</head>
+<body>
+<div class="app">
+
+  <header class="header">
+    <div class="header-topbar"></div>
+    <div class="header-inner">
+      <div class="hd1" aria-hidden="true"></div>
+      <div class="hd2" aria-hidden="true"></div>
+      <div class="brand-row">
+        <svg class="dgc-mark" viewBox="0 0 48 48" fill="none" xmlns="http://www.w3.org/2000/svg" aria-label="DGC logo">
+          <circle cx="24" cy="24" r="20" stroke="#5584D4" stroke-width="2.2" fill="none"/>
+          <line x1="10" y1="38" x2="38" y2="10" stroke="#5584D4" stroke-width="2.2" stroke-linecap="round"/>
+          <line x1="18" y1="30" x2="34" y2="14" stroke="#5584D4" stroke-width="2.2" stroke-linecap="round"/>
+          <polyline points="24,14 34,14 34,24" stroke="#5584D4" stroke-width="2.2" fill="none" stroke-linecap="round" stroke-linejoin="round"/>
+          <line x1="30" y1="18" x2="14" y2="34" stroke="#5584D4" stroke-width="2.2" stroke-linecap="round"/>
+          <polyline points="24,34 14,34 14,24" stroke="#5584D4" stroke-width="2.2" fill="none" stroke-linecap="round" stroke-linejoin="round"/>
+        </svg>
+        <div>
+          <div class="brand-name">DGC</div>
+          <div class="brand-sub">Daniel Groenewald Consulting</div>
+        </div>
+      </div>
+      <div class="hdr-title">High Performing Teams <span class="accent">Assessment</span></div>
+      <div class="hdr-desc">This is a research-based instrument for measuring the 12 characteristics and 2 preconditions of high-performing school teams. Designed for use by school leadership teams as part of a structured team development process facilitated by Daniel Groenewald Consulting.</div>
+      <div class="header-meta-grid">
+        <div class="header-meta-card"><div class="hmc-val">14</div><div class="hmc-lbl">Dimensions</div></div>
+        <div class="header-meta-card"><div class="hmc-val">70</div><div class="hmc-lbl">Survey Items</div></div>
+        <div class="header-meta-card"><div class="hmc-val">360°</div><div class="hmc-lbl">Multi-rater</div></div>
+        <div class="header-meta-card"><div class="hmc-val">AI</div><div class="hmc-lbl">Generated Report</div></div>
+      </div>
+      <div class="citation">Adapted from: Groenewald, D., Lavery, S. &amp; O'Neill, M. (2025). Teams matter: Characteristics of senior leadership in high-performing Western Australian Catholic schools. <em>Issues in Educational Research, 35</em>(1), 181–198. www.iier.org.au/iier35/groenewald.pdf</div>
+    </div>
+  </header>
+
+  <nav class="nav" aria-label="Assessment sections">
+    <button class="nav-tab active" onclick="showPanel('setup',this)">Setup</button>
+    <button class="nav-tab" onclick="showPanel('survey',this)">Survey</button>
+    <button class="nav-tab" id="tab-results" onclick="showPanel('results',this)">My Results</button>
+    <button class="nav-tab" onclick="showPanel('facilitator',this)">Facilitator View</button>
+  </nav>
+
+  <main>
+
+  <!-- SETUP -->
+  <div class="panel active" id="panel-setup">
+    <div class="purpose-card">
+      <h2>About This <span>Assessment</span></h2>
+      <p class="purpose-lead">Before working with a team, we need to understand its strengths and areas for growth. This tool maps your team against 70 research-based items across 14 dimensions, giving us the insight to design a development process that is targeted, evidence-informed, and directly relevant to your context.</p>
+      <p style="font-size:13px;color:rgba(255,255,255,0.6);margin-bottom:1.5rem;position:relative;z-index:2;line-height:1.7">High-performing teams don't emerge by chance. Like elite athletes, team members need to train <em>together</em> — not just individually. This assessment is the first step in a structured process that addresses how your team works together, not just what each member brings.</p>
+      <div class="purpose-cols" style="margin-bottom:1.5rem">
+        <div class="purpose-col">
+          <h4>What we do together</h4>
+          <ul>
+            <li>Purposeful team formation with clear expectations and a team charter</li>
+            <li>Explore the characteristics of high-performing teams (Groenewald et al., 2025)</li>
+            <li>Build coaching and courageous conversation skills</li>
+          </ul>
+        </div>
+        <div class="purpose-col">
+          <h4>What you can expect</h4>
+          <ul>
+            <li>Improved collaboration and team cohesion</li>
+            <li>Increased engagement and shared ownership</li>
+            <li>Enhanced decision-making and collective efficacy</li>
+          </ul>
+        </div>
+      </div>
+      <div style="border-top:1px solid rgba(255,255,255,0.1);padding-top:1.25rem;position:relative;z-index:2;display:grid;grid-template-columns:auto 1fr;gap:1.25rem;align-items:flex-start;margin-bottom:1.25rem">
+        <div style="width:52px;height:52px;border-radius:50%;background:var(--cobalt);border:2px solid rgba(255,255,255,0.2);display:flex;align-items:center;justify-content:center;flex-shrink:0">
+          <span style="font-family:'Montserrat',sans-serif;font-weight:900;font-size:15px;color:white">DG</span>
+        </div>
+        <div>
+          <div style="font-family:'Montserrat',sans-serif;font-weight:700;font-size:14px;color:white;margin-bottom:2px">Dr Daniel Groenewald</div>
+          <div style="font-size:11px;color:var(--yellow);font-weight:600;letter-spacing:0.5px;margin-bottom:0.75rem;text-transform:uppercase">Leadership &amp; Learning Development Consultant</div>
+          <p style="font-size:13px;color:rgba(255,255,255,0.7);line-height:1.7;margin-bottom:0.6rem">An experienced leadership and learning development specialist passionate about developing people, teams, and organisations in educational settings. With a background spanning teaching, educational leadership, research and professional learning, Daniel brings a wealth of experience to support leaders and teams to reach their potential.</p>
+          <p style="font-size:13px;color:rgba(255,255,255,0.7);line-height:1.7">Daniel has collaborated with school systems, crafting and guiding leadership frameworks and programs for emerging leaders, middle leaders, and experienced principals. His doctoral research examined the attributes of high-performing teams in Catholic secondary schools.</p>
+        </div>
+      </div>
+
+    </div>
+
+    <div class="card">
+      <div class="card-head"><div class="card-rule"></div><h3>Respondent &amp; Team Information</h3></div>
+      <div class="form-grid">
+        <div class="fg"><label for="rname">Your Name</label><input type="text" id="rname" placeholder="e.g. Sarah Mitchell" autocomplete="name"></div>
+        <div class="fg"><label for="school">School / Organisation</label><input type="text" id="school" placeholder="e.g. St Catherine's College"></div>
+        <div class="fg"><label for="tname">Team Name</label><input type="text" id="tname" placeholder="e.g. Senior Leadership Team"></div>
+        <div class="fg"><label for="sdate">Date</label><input type="date" id="sdate"></div>
+        <div class="fg"><label for="target">Team Being Assessed</label><input type="text" id="target" placeholder="Name of the team you are rating"></div>
+        <div class="fg"><label for="tsize">Team Size</label>
+          <select id="tsize">
+            <option value="">Select...</option>
+            <option>2–5 members</option><option>6–10 members</option>
+            <option>11–20 members</option><option>20+ members</option>
+          </select>
+        </div>
+      </div>
+    </div>
+    <div class="card">
+      <div class="card-head"><div class="card-rule"></div><h3>Your Role in This Team</h3></div>
+      <div class="role-grid">
+        <button class="role-btn" onclick="selectRole(this,'Self — Team Member')">Self — Team Member</button>
+        <button class="role-btn" onclick="selectRole(this,'Team Leader')">Team Leader</button>
+        <button class="role-btn" onclick="selectRole(this,'Peer Rater')">Peer Rater</button>
+        <button class="role-btn" onclick="selectRole(this,'Middle Leader')">Middle Leader</button>
+        <button class="role-btn" onclick="selectRole(this,'External Observer')">External Observer</button>
+      </div>
+      <input type="hidden" id="rrole" value="">
+    </div>
+    <div style="display:flex;justify-content:flex-end">
+      <button class="btn-primary" onclick="startSurvey()">Begin Assessment →</button>
+    </div>
+  </div>
+
+  <!-- SURVEY -->
+  <div class="panel" id="panel-survey">
+    <div class="prog-bar-wrap">
+      <div class="prog-lbl" id="prog-lbl">Section 1 of 14</div>
+      <div class="prog-track"><div class="prog-fill" id="prog-fill" style="width:4%"></div></div>
+      <div class="prog-pct" id="prog-pct">0 of 70 items</div>
+    </div>
+    <div id="survey-content"></div>
+    <div class="survey-nav">
+      <button class="btn-outline" id="btn-prev" onclick="prevSec()" style="visibility:hidden">← Previous</button>
+      <div class="scale-hint">0 = Not evident &nbsp;·&nbsp; 5 = Completely present</div>
+      <button class="btn-primary" id="btn-next" onclick="nextSec()">Next →</button>
+      <div id="submit-wrap" style="display:none;margin-top:1.25rem">
+      <div style="background:var(--navy);border-radius:12px;padding:2rem;text-align:center">
+        <p style="font-family:'Montserrat',sans-serif;font-weight:700;font-size:15px;color:white;margin-bottom:0.5rem">You have reached the end of the assessment.</p>
+        <p style="font-size:13px;color:rgba(255,255,255,0.55);margin-bottom:1.5rem;line-height:1.6">Click Submit to send your results to Dr Daniel Groenewald and see your overview.</p>
+        <button class="btn-yellow" onclick="completeSurvey()" style="font-size:15px;padding:14px 48px;font-weight:900">Submit Assessment →</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- CLIENT RESULTS — teaser only -->
+  <div class="panel" id="panel-results">
+    <div class="teaser-wrap" style="padding:0">
+
+      <div class="teaser-banner">
+        <div class="rb-deco" aria-hidden="true"></div>
+        <div style="font-size:10px;letter-spacing:2px;color:rgba(255,255,255,0.4);font-weight:700;font-family:'Montserrat',sans-serif;margin-bottom:8px;position:relative;z-index:2">HPTA · YOUR RESULTS</div>
+        <h2>Thank you, <span id="teaser-name">—</span></h2>
+        <p>Your assessment has been submitted. Here is your overview.</p>
+        <div class="overall-ring">
+          <span class="big" id="teaser-score">—</span>
+          <span class="sm">/ 5.0</span>
+        </div>
+        <div style="font-size:12px;color:rgba(255,255,255,0.5);margin-bottom:1.25rem;position:relative;z-index:2">Overall team score across all 14 dimensions</div>
+        <div class="traffic-grid">
+          <div class="traffic-box t-green"><div class="tv" id="t-above">—</div><div class="tl">Above standard</div></div>
+          <div class="traffic-box t-amber"><div class="tv" id="t-at">—</div><div class="tl">At standard</div></div>
+          <div class="traffic-box t-red"><div class="tv" id="t-below">—</div><div class="tl">Below standard</div></div>
+        </div>
+        <p style="font-size:11px;color:rgba(255,255,255,0.35);position:relative;z-index:2">Standard = 3.0 / 5.0 &nbsp;·&nbsp; All 14 dimensions should reach this minimum</p>
+      </div>
+
+      <div class="teaser-cta">
+        <div style="font-size:32px;margin-bottom:0.75rem">🔒</div>
+        <h3>Your Full Report is Ready</h3>
+        <p>Your complete dimension-by-dimension scores, radar profile, narrative interpretation, and personalised development recommendations are waiting. These will be presented and explained by Dr Daniel Groenewald in your debrief session.</p>
+        <a href="https://www.danielgroenewaldconsulting.com.au/contact" target="_blank" rel="noopener">
+          <button class="btn-primary" style="font-size:14px;padding:14px 36px">Book Your Debrief Session →</button>
+        </a>
+        <p style="font-size:12px;color:var(--text-muted);margin-top:1rem">Dr Groenewald has already received your results and will be in touch shortly.</p>
+        <div id="email-status" style="display:none;margin-top:1rem;padding:0.75rem 1rem;border-radius:8px;font-size:13px;font-weight:600;font-family:'Montserrat',sans-serif;line-height:1.5"></div>
+      </div>
+
+    </div>
+  </div>
+
+  <!-- FACILITATOR VIEW — password protected -->
+  <div class="panel" id="panel-facilitator">
+
+    <!-- LOCK SCREEN -->
+    <div id="fac-lock-screen">
+      <div class="fac-lock">
+        <div style="font-size:36px;margin-bottom:0.75rem">🔐</div>
+        <h3>Facilitator Access</h3>
+        <p>This view is for Dr Daniel Groenewald only. Enter your facilitator password to access the full report generator.</p>
+        <div class="fac-lock-row">
+          <input type="password" id="fac-password" placeholder="Enter password" onkeydown="if(event.key==='Enter')checkPassword()">
+          <button class="btn-yellow" onclick="checkPassword()">Enter</button>
+        </div>
+        <div class="fac-lock-err" id="fac-err" style="display:none">Incorrect password. Please try again.</div>
+      </div>
+    </div>
+
+    <!-- FULL REPORT — shown after password -->
+    <div id="fac-report" style="display:none;padding:0">
+
+      <div style="background:var(--navy);border-radius:12px;padding:1.25rem 1.75rem;margin-bottom:1.25rem;display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:1rem">
+        <div>
+          <div style="font-size:10px;letter-spacing:2px;color:rgba(255,255,255,0.4);font-weight:700;font-family:'Montserrat',sans-serif;margin-bottom:4px">FACILITATOR VIEW · FULL REPORT</div>
+          <div style="font-family:'Montserrat',sans-serif;font-weight:700;font-size:14px;color:white" id="fac-client-name">No client loaded</div>
+        </div>
+        <button class="btn-outline" onclick="loadFromLatest()" style="font-size:12px;padding:8px 16px">Load Latest Submission</button>
+      </div>
+
+      <!-- MANUAL SCORE ENTRY -->
+      <div class="fac-input-card">
+        <h4>Enter Client Scores — from email</h4>
+        <p style="font-size:12px;color:var(--text-muted);margin-bottom:1rem;line-height:1.6">Copy scores from the email you received and enter them below, then click Generate Report.</p>
+        <div style="display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-bottom:1rem" id="fac-score-inputs"></div>
+        <button class="btn-primary" onclick="generateFacReport()" style="width:100%">Generate Full Report →</button>
+      </div>
+
+      <!-- FULL REPORT OUTPUT -->
+      <div id="fac-report-output" style="display:none">
+        <div class="report-banner">
+          <div class="rb-deco" aria-hidden="true"></div>
+          <div class="rb-top">
+            <div>
+              <div style="font-size:10px;letter-spacing:2px;color:rgba(255,255,255,0.4);font-weight:700;font-family:'Montserrat',sans-serif;margin-bottom:8px">HPTA · FACILITATOR REPORT</div>
+              <h2 id="fac-r-title">Client Report</h2>
+              <p id="fac-r-sub"></p>
+            </div>
+            <div style="text-align:center">
+              <div style="font-size:10px;color:rgba(255,255,255,0.4);font-weight:700;font-family:'Montserrat',sans-serif;margin-bottom:8px;letter-spacing:1px">OVERALL</div>
+              <div class="score-ring"><span class="big" id="fac-overall">—</span><span class="sm">/ 5.0</span></div>
+            </div>
+          </div>
+        </div>
+
+        <div class="results-grid">
+          <div class="result-card"><h4>Dimension Scores</h4><div id="fac-dim-scores"></div></div>
+          <div class="result-card">
+            <h4>Standard Comparison</h4>
+            <p style="font-size:12px;color:var(--text-secondary);margin-bottom:0.75rem;line-height:1.6">Minimum standard: 3.0 / 5.0 across all 14 dimensions.</p>
+            <div class="bench-grid">
+              <div class="bench-box"><div class="bv" id="fac-b-your">—</div><div class="bl">Overall Score</div></div>
+              <div class="bench-box"><div class="bv">3.0</div><div class="bl">Minimum Standard</div></div>
+              <div class="bench-box"><div class="bv" id="fac-b-at">—</div><div class="bl">At Standard</div><div class="bc" id="fac-b-cmp"></div></div>
+            </div>
+          </div>
+          <div class="result-card full-w">
+            <h4>Radar Profile</h4>
+            <div class="chart-wrap"><canvas id="facRadarChart"></canvas></div>
+          </div>
+        </div>
+
+        <div class="ai-card">
+          <div class="ai-card-head"><div class="card-rule"></div><h4>Narrative Interpretation</h4><span class="pill-ai">AI</span><span class="pill-dgc">DGC</span></div>
+          <div class="narr-body" id="fac-narrative"><p style="color:var(--text-muted)">Click Generate Full Report to create the narrative.</p></div>
+        </div>
+        <div class="ai-card">
+          <div class="ai-card-head"><div class="card-rule"></div><h4>Development Recommendations</h4><span class="pill-yr">Priorities</span><span class="pill-dgc">DGC</span></div>
+          <div id="fac-recs"><p style="color:var(--text-muted);font-size:14px">Click Generate Full Report to create recommendations.</p></div>
+        </div>
+
+
+      </div>
+    </div>
+  </div>
+
+  </main>
+
+  <footer style="padding:2rem;font-size:12px;color:var(--text-muted);border-top:1px solid var(--border);margin-top:2rem">
+    <div style="max-width:940px;margin:0 auto;display:flex;justify-content:space-between;align-items:flex-start;gap:2rem;flex-wrap:wrap">
+      <div>
+        <p style="font-family:'Montserrat',sans-serif;font-weight:700;color:var(--text-secondary);margin-bottom:4px;font-size:13px">High Performing Teams Assessment (HPTA)</p>
+<p style="font-style:italic;color:var(--text-muted);line-height:1.65;max-width:560px">Adapted from: Groenewald, D., Lavery, S. &amp; O'Neill, M. (2025). Teams matter: Characteristics of senior leadership in high-performing Western Australian Catholic schools. <em>Issues in Educational Research, 35</em>(1), 181–198. <a href="http://www.iier.org.au/iier35/groenewald.pdf" target="_blank" rel="noopener" style="color:var(--cobalt);text-decoration:underline;font-weight:600">www.iier.org.au/iier35/groenewald.pdf</a></p>
+      </div>
+      <div style="text-align:right;flex-shrink:0">
+        <p style="font-family:'Montserrat',sans-serif;font-weight:700;color:var(--text-secondary);margin-bottom:4px;font-size:13px">Dr Daniel Groenewald</p>
+        <p style="margin-bottom:2px">Perth, WA &amp; Melbourne, VIC</p>
+        <a href="https://www.danielgroenewaldconsulting.com.au" target="_blank" rel="noopener" style="color:var(--cobalt);text-decoration:none;font-weight:600">danielgroenewaldconsulting.com.au</a>
+      </div>
+    </div>
+  </footer>
+
+</div>
+
+<script>
+// ===== EMAILJS CONFIG =====
+const EJS_SERVICE  = 'service_5fwqocv';
+const EJS_TEMPLATE = 'template_nabi3kx';
+const EJS_KEY      = '7LW3zg08M2reK7SQp';
+const FAC_PASSWORD = 'DGC2025hpta';
+emailjs.init(EJS_KEY);
+
+// ===== DIMENSIONS =====
+const DIMS=[
+  {id:'p1',label:'Shared Vision',desc:'Precondition · Shared direction and purpose',pre:true,items:['Our team has a clearly articulated shared vision that guides our collective work.','All team members can describe the team\'s purpose and direction in their own words.','Our shared vision is regularly revisited and informs key decisions.','There is genuine commitment from all members to our team\'s vision and goals.','Our team aligns individual efforts toward a common and inspiring purpose.']},
+  {id:'p2',label:'Skilled Team Leadership',desc:'Precondition · Capable and trusted leadership',pre:true,items:['Our team leader demonstrates the knowledge and skills needed to lead effectively.','The team leader creates conditions where all members contribute meaningfully.','Leadership in this team builds confidence, trust, and clear direction.','Our leader navigates challenges with calmness and strategic clarity.','The team leader actively develops the capability of each team member.']},
+  {id:'d1',label:'Effective Team Design',desc:'Skilled experts leading their areas',items:['Team roles are clearly defined and matched to each member\'s expertise.','The team is structured to maximise collective performance.','Each member brings specialised knowledge that strengthens the team.','Team membership decisions are made deliberately and thoughtfully.','There is an appropriate mix of skills and experience in this team.']},
+  {id:'d2',label:'Clear Operating Norms',desc:'Shared meeting and behaviour rules',items:['Our team has agreed norms guiding how we conduct meetings and interactions.','Team members consistently uphold our shared behavioural expectations.','When norms are breached, we address this respectfully and constructively.','Our operating norms are revisited and refined over time.','New members are effectively inducted into our team\'s expectations.']},
+  {id:'d3',label:'Positive Relationships',desc:'Trust, care, humour, forgiveness',items:['There is a strong sense of trust and psychological safety in this team.','Team members genuinely care about each other\'s wellbeing.','Humour and warmth are a natural part of how we relate to one another.','When mistakes are made, we respond with understanding rather than blame.','Relationships in this team are characterised by honesty and mutual respect.']},
+  {id:'d4',label:'Emotional Intelligence',desc:'Self-regulation and attunement',items:['Team members are aware of how their emotions affect others.','We can have difficult conversations without damaging relationships.','There is strong empathy and attunement in how we listen to each other.','Team members manage emotional reactions constructively under pressure.','Our team responds to conflict with emotional maturity and relational skill.']},
+  {id:'d5',label:'Individual Competence',desc:'Experienced professionals',items:['Each member brings a high level of professional expertise to their role.','Team members proactively develop and maintain their individual competence.','There is strong confidence across the team in each other\'s capability.','Individual excellence is recognised and valued within this team.','Members hold themselves accountable to high professional standards.']},
+  {id:'d6',label:'Shared Leadership',desc:'Load-sharing, vision-sharing, clarity',items:['Leadership responsibilities are distributed and shared across team members.','Different members step up to lead when their expertise is most needed.','There is clarity about who is responsible for what within our team.','Leadership in this team is collaborative rather than concentrated in one person.','Members share the load of decision-making and accountability equitably.']},
+  {id:'d7',label:'Skilled Communication',desc:'Open, kind interactions',items:['Communication in this team is open, transparent, and timely.','Team members listen actively and seek to understand before responding.','Feedback is given and received in a kind and constructive manner.','Difficult topics are raised openly rather than discussed in corridors.','Our communication culture strengthens team cohesion.']},
+  {id:'d8',label:'Shared Time Together',desc:'Positive contact opportunities',items:['Our team has regular, purposeful opportunities to meet and collaborate.','Informal time together is valued and contributes to team culture.','Meeting time is used efficiently and directed toward meaningful purposes.','We protect time to work together even amid competing demands.','Social connection helps us function better as a high-performing team.']},
+  {id:'d9',label:'Middle Leader Engagement',desc:'Development and listening',items:['Middle leaders in this team feel their voices are genuinely heard.','Middle leaders are supported to grow in their leadership roles.','There is a strong feedback loop between middle and senior leaders.','Middle leaders take ownership in advancing our shared team goals.','The contributions of middle leaders are explicitly acknowledged.']},
+  {id:'d10',label:'Compelling Challenge',desc:'Purpose that focuses energy',items:['Our team is energised by meaningful goals that stretch and inspire us.','There is a shared sense of urgency and purpose driving our collective effort.','Challenges are framed to motivate rather than overwhelm team members.','Our team sees difficulty as an opportunity to grow and improve.','A compelling shared challenge keeps us cohesive and focused.']},
+  {id:'d11',label:'Professional Development',desc:'Growth and review',items:['Professional learning is embedded in our team\'s regular practice.','We reflect critically on our practice and actively seek to improve.','Team members support and challenge each other\'s professional growth.','There is a culture of inquiry, experimentation, and learning from evidence.','Professional development in this team is relevant, practical, and sustained.']},
+  {id:'d12',label:'Performance Evaluation',desc:'Success and growth review',items:['Our team regularly reviews progress against our shared goals.','We use data and evidence to evaluate our collective performance.','Evaluation in this team is constructive and focused on improvement.','Successes are celebrated and used to build positive team momentum.','Honest appraisal of our team\'s effectiveness is a normal part of how we work.']}
+];
+
+let curSec=0,resp={},info={},facChart=null,facUnlocked=false,latestScores=null;
+
+function showPanel(p,btn){
+  document.querySelectorAll('.panel').forEach(el=>el.classList.remove('active'));
+  document.querySelectorAll('.nav-tab').forEach(el=>el.classList.remove('active'));
+  document.getElementById('panel-'+p).classList.add('active');
+  if(btn) btn.classList.add('active');
+  window.scrollTo({top:0,behavior:'smooth'});
+}
+
+function selectRole(btn,r){
+  document.querySelectorAll('.role-btn').forEach(b=>b.classList.remove('selected'));
+  btn.classList.add('selected');
+  document.getElementById('rrole').value=r;
+}
+
+function startSurvey(){
+  info={
+    name:document.getElementById('rname').value||'Respondent',
+    school:document.getElementById('school').value||'',
+    team:document.getElementById('tname').value||'Leadership Team',
+    role:document.getElementById('rrole').value||'Team Member',
+    date:document.getElementById('sdate').value||new Date().toISOString().split('T')[0]
+  };
+  curSec=0;
+  showPanel('survey',document.querySelectorAll('.nav-tab')[1]);
+  renderSec();
+}
+
+function renderSec(){
+  const d=DIMS[curSec],tot=DIMS.length,pct=Math.round((curSec/tot)*100);
+  document.getElementById('prog-lbl').textContent='Section '+(curSec+1)+' of '+tot;
+  document.getElementById('prog-fill').style.width=Math.max(4,pct)+'%';
+  document.getElementById('prog-pct').textContent=(curSec*5)+' of 70 items';
+  document.getElementById('btn-prev').style.visibility=curSec===0?'hidden':'visible';
+  document.getElementById('btn-next').textContent='Next →';
+  document.getElementById('btn-next').style.display=curSec===tot-1?'none':'inline-flex';
+  const submitWrap = document.getElementById('submit-wrap');
+  if(submitWrap) submitWrap.style.display = curSec===tot-1 ? 'block' : 'none';
+  let num=d.pre?'PRE':String(curSec-1).padStart(2,'0');
+  let html='<div class="dim-block"><div class="dim-hdr"><div class="dim-badge'+(d.pre?' pre':'')+'">'+num+'</div><div><h3>'+d.label+'</h3><p>'+d.desc+'</p></div></div><div class="scale-leg"><span>0 — Not evident</span><span>1 — Barely</span><span>2 — Sometimes</span><span>3 — Most times</span><span>4 — Very present</span><span>5 — Completely</span></div><div class="items-list">';
+  d.items.forEach((item,i)=>{
+    const k=d.id+'_'+i,v=resp[k];
+    html+='<div class="item-row"><div><div class="item-text">'+item+'</div><div class="item-meta">'+d.label+' · Item '+(i+1)+' of 5</div></div><div class="likert">';
+    for(let s=0;s<=5;s++){html+='<button class="lbtn'+(v===s?' sel':'')+'" onclick="setR(\''+k+'\','+s+',this)">'+s+'</button>';}
+    html+='</div></div>';
+  });
+  html+='</div></div>';
+  document.getElementById('survey-content').innerHTML=html;
+  window.scrollTo(0,0);
+}
+
+function setR(k,v,btn){
+  resp[k]=v;
+  btn.closest('.likert').querySelectorAll('.lbtn').forEach(b=>b.classList.remove('sel'));
+  btn.classList.add('sel');
+}
+
+function nextSec(){
+  if(curSec<DIMS.length-1){curSec++;renderSec();}
+  else{completeSurvey();}
+}
+function prevSec(){if(curSec>0){curSec--;renderSec();}}
+
+function dimScore(id){
+  const d=DIMS.find(x=>x.id===id);if(!d) return null;
+  let tot=0,cnt=0;
+  d.items.forEach((_,i)=>{const v=resp[id+'_'+i];if(v!==undefined){tot+=v;cnt++;}});
+  return cnt>0?(tot/cnt).toFixed(1):null;
+}
+
+function overallScore(scores){
+  let tot=0,cnt=0;
+  scores.forEach(s=>{if(s!==null){tot+=parseFloat(s);cnt++;}});
+  return cnt>0?(tot/cnt).toFixed(1):null;
+}
+
+function completeSurvey(){
+  const scores=DIMS.map(d=>dimScore(d.id));
+  const ov=overallScore(scores);
+
+  // Store for facilitator quick-load
+  latestScores={info:{...info},scores};
+
+  // Show teaser
+  document.getElementById('teaser-name').textContent=info.name;
+  document.getElementById('teaser-score').textContent=ov||'—';
+  const above=scores.filter(s=>s&&parseFloat(s)>3).length;
+  const at=scores.filter(s=>s&&parseFloat(s)===3).length;
+  const below=scores.filter(s=>s&&parseFloat(s)<3).length;
+  document.getElementById('t-above').textContent=above;
+  document.getElementById('t-at').textContent=at;
+  document.getElementById('t-below').textContent=below;
+
+  showPanel('results',document.querySelectorAll('.nav-tab')[2]);
+  window.scrollTo({top:0,behavior:'instant'});
+
+  // Send email
+  sendResultsEmail(scores,ov);
+}
+
+function sendResultsEmail(scores,ov){
+  const dimLines=DIMS.map((d,i)=>{
+    const s=scores[i]||'—';
+    const flag=s!=='—'?(parseFloat(s)>=3?'✓':'⚠ BELOW STANDARD'):'';
+    return d.label+': '+s+'/5 '+flag;
+  }).join('\n');
+
+  const above=scores.filter(s=>s&&parseFloat(s)>3).length;
+  const below=scores.filter(s=>s&&parseFloat(s)<3).length;
+
+  const params={
+    to_name:'Dr Daniel Groenewald',
+    respondent_name:info.name,
+    respondent_role:info.role,
+    school:info.school||'Not specified',
+    team:info.team,
+    date:info.date,
+    overall_score:ov+' / 5.0',
+    above_standard:above+' of 14 dimensions',
+    below_standard:below+' of 14 dimensions',
+    dimension_scores:dimLines,
+    booking_note:'This client has been shown the teaser result and directed to book a debrief session.'
+  };
+
+  const statusEl = document.getElementById('email-status');
+  if(statusEl){
+    statusEl.style.display='block';
+    statusEl.textContent='Sending results to Dr Groenewald...';
+    statusEl.style.background='rgba(61,106,181,0.15)';
+    statusEl.style.color='#3D6AB5';
+  }
+  emailjs.send(EJS_SERVICE,EJS_TEMPLATE,params)
+    .then(function(){
+      console.log('Email sent successfully');
+      if(statusEl){
+        statusEl.textContent='✓ Results sent successfully to Dr Groenewald.';
+        statusEl.style.background='rgba(6,78,50,0.15)';
+        statusEl.style.color='#064E32';
+      }
+    })
+    .catch(function(err){
+      console.error('EmailJS error:', JSON.stringify(err));
+      if(statusEl){
+        statusEl.textContent='Email delivery issue: '+JSON.stringify(err)+'. Please contact daniel@danielgroenewaldconsulting.com.au directly.';
+        statusEl.style.background='rgba(127,29,29,0.12)';
+        statusEl.style.color='#7F1D1D';
+      }
+    });
+}
+
+// ===== FACILITATOR =====
+function checkPassword(){
+  const val=document.getElementById('fac-password').value;
+  if(val===FAC_PASSWORD){
+    document.getElementById('fac-lock-screen').style.display='none';
+    document.getElementById('fac-report').style.display='block';
+    facUnlocked=true;
+    buildFacInputs();
+    if(latestScores) loadFromLatest();
+  } else {
+    document.getElementById('fac-err').style.display='block';
+    document.getElementById('fac-password').value='';
+  }
+}
+
+function buildFacInputs(){
+  const el=document.getElementById('fac-score-inputs');
+  el.innerHTML=DIMS.map(d=>'<div class="fac-item"><label>'+d.label+'</label><input type="number" id="fi_'+d.id+'" min="0" max="5" step="0.1" placeholder="0.0–5.0"></div>').join('');
+  // Client info fields
+  const info_el=document.querySelector('#fac-report .fac-input-card');
+  const infoHtml='<div style="display:grid;grid-template-columns:repeat(3,1fr);gap:8px;margin-bottom:1rem"><div class="fac-item"><label>Client Name</label><input type="text" id="fi_name" placeholder="Name"></div><div class="fac-item"><label>School</label><input type="text" id="fi_school" placeholder="School"></div><div class="fac-item"><label>Team</label><input type="text" id="fi_team" placeholder="Team name"></div></div>';
+  info_el.insertAdjacentHTML('afterbegin',infoHtml);
+}
+
+function loadFromLatest(){
+  if(!latestScores) return;
+  document.getElementById('fi_name').value=latestScores.info.name||'';
+  document.getElementById('fi_school').value=latestScores.info.school||'';
+  document.getElementById('fi_team').value=latestScores.info.team||'';
+  DIMS.forEach((d,i)=>{
+    const el=document.getElementById('fi_'+d.id);
+    if(el&&latestScores.scores[i]) el.value=latestScores.scores[i];
+  });
+  document.getElementById('fac-client-name').textContent='Loaded: '+latestScores.info.name+' — '+latestScores.info.team;
+}
+
+function generateFacReport(){
+  const name=document.getElementById('fi_name').value||'Client';
+  const school=document.getElementById('fi_school').value||'';
+  const team=document.getElementById('fi_team').value||'Team';
+  const scores=DIMS.map(d=>{
+    const v=parseFloat(document.getElementById('fi_'+d.id).value);
+    return isNaN(v)?null:v.toFixed(1);
+  });
+  const ov=overallScore(scores);
+
+  document.getElementById('fac-r-title').textContent=team+' — Full Report';
+  document.getElementById('fac-r-sub').textContent=name+(school?' · '+school:'');
+  document.getElementById('fac-overall').textContent=ov||'—';
+  document.getElementById('fac-b-your').textContent=ov||'—';
+  const atStd=scores.filter(s=>s&&parseFloat(s)>=3).length;
+  const total=scores.filter(s=>s!==null).length;
+  document.getElementById('fac-b-at').textContent=atStd+' / '+total;
+  const diff=ov?parseFloat(ov)-3.0:0;
+  const cmpEl=document.getElementById('fac-b-cmp');
+  cmpEl.textContent=diff>=0?'↑ Above standard':'↓ Below standard';
+  cmpEl.className='bc '+(diff>=0?'c-above':'c-below');
+
+  renderFacDimScores(scores);
+  renderFacRadar(scores);
+  genFacNarrative(scores,ov,name,school,team);
+  genFacRecs(scores);
+
+  document.getElementById('fac-report-output').style.display='block';
+  document.getElementById('fac-client-name').textContent=name+' — '+team;
+}
+
+function barCls(s){const n=parseFloat(s);return n>=4?'fill-hi':n>=2.5?'fill-mid':'fill-lo';}
+
+function renderFacDimScores(scores){
+  document.getElementById('fac-dim-scores').innerHTML=DIMS.map((d,i)=>{
+    const s=scores[i]||'—';const pct=s!=='—'?parseFloat(s)/5*100:0;
+    const flag=s!=='—'&&parseFloat(s)<3?' ⚠':'';
+    return '<div class="dim-row"><div class="dim-row-name">'+d.label+flag+'</div><div class="dim-track"><div class="dim-fill '+barCls(s)+'" style="width:'+pct+'%"></div></div><div class="dim-val">'+s+'</div></div>';
+  }).join('');
+}
+
+function renderFacRadar(scores){
+  const labels=DIMS.map(d=>d.label.length>13?d.label.substring(0,13)+'…':d.label);
+  const sd=scores.map(s=>s?parseFloat(s):0);
+  if(facChart) facChart.destroy();
+  facChart=new Chart(document.getElementById('facRadarChart'),{
+    type:'radar',
+    data:{labels,datasets:[{label:'Score',data:sd,backgroundColor:'rgba(61,106,181,0.12)',borderColor:'#3D6AB5',borderWidth:2.5,pointBackgroundColor:'#3D6AB5',pointRadius:4}]},
+    options:{responsive:true,maintainAspectRatio:false,scales:{r:{min:0,max:5,ticks:{stepSize:1,font:{size:10,family:'Montserrat'},color:'#5A6882'},pointLabels:{font:{size:10,family:'Montserrat',weight:'600'},color:'#0D1525'},grid:{color:'#C8D3E8'},angleLines:{color:'#C8D3E8'}}},plugins:{legend:{display:false}}}
+  });
+}
+
+async function genFacNarrative(scores,ov,name,school,team){
+  const el=document.getElementById('fac-narrative');
+  el.innerHTML='<div class="loading-dots"><span></span><span></span><span></span></div>&nbsp; Generating narrative…';
+  const strong=DIMS.filter((_,i)=>scores[i]&&parseFloat(scores[i])>=4).map(d=>d.label);
+  const dev=DIMS.filter((_,i)=>scores[i]&&parseFloat(scores[i])<3).map(d=>d.label);
+  const dimSum=DIMS.map((d,i)=>d.label+': '+(scores[i]||'not rated')+'/5').join('; ');
+  const prompt='You are writing a professional psychometric narrative report for the High Performing Teams Assessment (HPTA), adapted from the research findings of Groenewald, Lavery and O\'Neill. Write for a senior school leadership context.\n\nClient: '+name+', School: '+(school||'not specified')+', Team: '+team+'\nOverall score: '+ov+'/5.0 (Minimum standard: 3.0/5.0)\nDimension scores: '+dimSum+'\nStrengths (>=4.0): '+(strong.join(', ')||'None identified')+'\nDimensions below standard (<3.0): '+(dev.join(', ')||'None below standard')+'\n\nWrite 4 professional paragraphs for use by the facilitator in a paid debrief session. Paragraph 1: overall picture and context. Paragraph 2: key strengths and what drives them. Paragraph 3: dimensions below the 3/5 standard, named sensitively and constructively. Paragraph 4: affirming, forward-looking close that naturally leads into the DGC development program. Reference specific dimension names. No bullet points. No markdown. Plain paragraphs only.';
+  try{
+    const r=await fetch('https://api.anthropic.com/v1/messages',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({model:'claude-sonnet-4-20250514',max_tokens:1000,messages:[{role:'user',content:prompt}]})});
+    const d=await r.json();
+    const txt=d.content?.[0]?.text||'Unable to generate narrative.';
+    el.innerHTML=txt.split('\n\n').filter(p=>p.trim()).map(p=>'<p>'+p.trim()+'</p>').join('');
+  }catch(e){
+    el.innerHTML='<p style="color:var(--text-muted)">Narrative generation requires an active internet connection.</p>';
+  }
+}
+
+function genFacRecs(scores){
+  const rm={
+    p1:{high:'Invest in structured visioning processes — collaborative workshops build genuine shared direction.',medium:'Revisit your team vision at key points in the year to sustain alignment.',strength:'Your shared vision is foundational. Leverage it explicitly in communications and team rituals.'},
+    p2:{high:'Prioritise leadership capability development through coaching, mentoring, and structured reflection.',medium:'Ensure team leader development is resourced and supported at system level.',strength:'Skilled leadership underpins your team\'s success. Continue modelling collaborative practice.'},
+    d1:{high:'Revisit role clarity and design — ensure expertise is fully utilised and aligned to goals.',medium:'Review team structure at the start of each year for optimal configuration.',strength:'Your team design is well-calibrated. Maintain deliberate role-matching as membership evolves.'},
+    d2:{high:'Co-construct explicit operating norms and establish a regular review and accountability process.',medium:'Strengthen norm reinforcement by naming and affirming expected behaviours.',strength:'Your operating norms are a strength. Share your approach with other teams as a model.'},
+    d3:{high:'Create low-risk connection opportunities and invest deliberate time in relationship-building.',medium:'Introduce relational check-ins and celebrations to deepen trust.',strength:'Your relational culture is exceptional. Protect and actively nurture this as a strategic priority.'},
+    d4:{high:'Build emotional intelligence through structured professional learning — EQ coaching or team reflection.',medium:'Develop team agreements around emotional safety and constructive conflict.',strength:'Your team\'s EI is a significant advantage. Model this healthy culture across the school.'},
+    d5:{high:'Audit individual competencies and provide targeted development support and mentoring.',medium:'Foster peer learning and deliberate knowledge-sharing within the team.',strength:'Individual competence is high. Create structures to cross-pollinate expertise.'},
+    d6:{high:'Implement distributed leadership structures that formally share responsibility and decision-making.',medium:'Invite more members to take visible leadership of specific initiatives.',strength:'Shared leadership is embedded in your culture. Continue distributing and developing capacity.'},
+    d7:{high:'Establish clear communication protocols and model open, kind communication in all team forums.',medium:'Introduce structured dialogue practices to ensure all voices are heard.',strength:'Communication is a genuine strength. Leverage this to accelerate collaboration.'},
+    d8:{high:'Protect and prioritise team meeting and connection time deliberately in scheduling.',medium:'Introduce purposeful informal connection opportunities alongside formal meetings.',strength:'Your use of shared time is effective and intentional. Continue this purposeful design.'},
+    d9:{high:'Create formal feedback loops between middle and senior leaders to improve listening.',medium:'Invest in middle leader development and expand their participation in decisions.',strength:'Middle leader engagement is a key differentiator. Continue to develop them strategically.'},
+    d10:{high:'Identify or reframe a compelling shared challenge to focus collective energy.',medium:'Revisit team goals to ensure they are ambitious, meaningful, and genuinely energising.',strength:'Your compelling challenge is galvanising the team. Refresh goals as they are achieved.'},
+    d11:{high:'Embed structured professional learning into team practice — make reflection part of regular meetings.',medium:'Increase the consistency and practical relevance of professional development.',strength:'PD is deeply embedded in your practice. Share your model with other teams.'},
+    d12:{high:'Introduce regular team performance review processes aligned to shared goals.',medium:'Develop a team dashboard or review protocol to track progress and celebrate milestones.',strength:'Performance evaluation is a strength. Use your review processes to drive ongoing improvement.'}
+  };
+  const ranked=[...DIMS].map((d,i)=>({d,s:scores[i]?parseFloat(scores[i]):null})).filter(x=>x.s!==null).sort((a,b)=>a.s-b.s);
+  const recs=[];
+  ranked.slice(0,2).forEach(x=>recs.push({cls:'p-high',tag:'High Priority',title:x.d.label,text:(rm[x.d.id]||{}).high||'Prioritise deliberate attention to this dimension.'}));
+  ranked.slice(2,4).forEach(x=>recs.push({cls:'p-med',tag:'Focus Area',title:x.d.label,text:(rm[x.d.id]||{}).medium||'Continue developing this dimension systematically.'}));
+  ranked.slice(-2).forEach(x=>recs.push({cls:'p-str',tag:'Sustain & Share',title:x.d.label,text:(rm[x.d.id]||{}).strength||'This is a strength — sustain and share your practice.'}));
+  document.getElementById('fac-recs').innerHTML=recs.map(r=>'<div class="rec-item"><span class="rec-pri '+r.cls+'">'+r.tag+'</span><div class="rec-body"><h5>'+r.title+'</h5><p>'+r.text+'</p></div></div>').join('');
+}
+
+document.getElementById('sdate').value=new Date().toISOString().split('T')[0];
+// Ensure setup panel is active on load
+window.addEventListener('load', function(){
+  document.querySelectorAll('.panel').forEach(el=>el.classList.remove('active'));
+  document.querySelectorAll('.nav-tab').forEach(el=>el.classList.remove('active'));
+  document.getElementById('panel-setup').classList.add('active');
+  document.querySelectorAll('.nav-tab')[0].classList.add('active');
+  window.scrollTo(0,0);
+});
+
+// Send height to parent for dynamic iframe sizing
+function sendHeight(){
+  const h = document.body.scrollHeight;
+  window.parent.postMessage({type:'hpta-height',height:h},'*');
+}
+setInterval(sendHeight, 500);
+</script>
+</body>
+</html>
