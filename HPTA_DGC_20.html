@@ -1,0 +1,1488 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>High Performing Teams Assessment — DGC</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;600;700;800;900&family=Open+Sans:wght@400;500;600&display=swap" rel="stylesheet">
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.1/chart.umd.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/@emailjs/browser@3/dist/email.min.js"></script>
+  <style>
+    *{box-sizing:border-box;margin:0;padding:0}
+    :root{
+      --cobalt:#3D6AB5;--cobalt-dark:#2A4E8C;--cobalt-light:#5584D4;
+      --yellow:#F5C842;--navy:#0D1525;--navy-mid:#1A2744;
+      --white:#FFFFFF;--offwhite:#F2F5FB;--surface:#E8EDF7;--border:#C8D3E8;
+      --text-primary:#0D1525;--text-secondary:#384565;--text-muted:#5A6882;
+      --success-bg:#D1FAE5;--success-text:#064E32;
+      --warn-bg:#FEF3C7;--warn-text:#7A4500;
+      --danger-bg:#FEE2E2;--danger-text:#7F1D1D;
+      --info-bg:#DBEAFE;--info-text:#1E3A6E;
+    }
+    body{font-family:'Open Sans',sans-serif;background:var(--offwhite);color:var(--text-primary);font-size:15px;line-height:1.6;min-height:100vh}
+    .app{max-width:940px;margin:0 auto;padding-bottom:5rem}
+    .header{background:var(--navy);position:relative;overflow:hidden}
+    .header-topbar{height:5px;background:var(--cobalt)}
+    .header-inner{padding:2rem 2.5rem 2.25rem;position:relative;z-index:2}
+    .hd1{position:absolute;right:-50px;top:-50px;width:220px;height:220px;border:44px solid rgba(61,106,181,0.1);border-radius:50%}
+    .hd2{position:absolute;right:100px;bottom:-70px;width:140px;height:140px;border:28px solid rgba(245,200,66,0.07);border-radius:50%}
+    .brand-row{display:flex;align-items:center;gap:14px;margin-bottom:1.75rem}
+    .dgc-mark{width:48px;height:48px;flex-shrink:0}
+    .brand-name{font-family:'Montserrat',sans-serif;font-weight:900;font-size:14px;color:var(--cobalt-light);letter-spacing:3.5px}
+    .brand-sub{font-size:11px;color:rgba(255,255,255,0.6);letter-spacing:0.8px;font-weight:500}
+    .hdr-title{font-family:'Montserrat',sans-serif;font-weight:900;font-size:1.95rem;color:var(--white);line-height:1.08;margin-bottom:0.45rem}
+    .hdr-title .accent{color:var(--yellow)}
+    .hdr-desc{font-size:14px;color:#FFFFFF;font-weight:500;max-width:540px;line-height:1.7;margin-bottom:1.5rem}
+    .header-meta-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:10px;margin-bottom:1.5rem}
+    .header-meta-card{background:rgba(255,255,255,0.08);border:1px solid rgba(255,255,255,0.15);border-radius:10px;padding:0.85rem 1rem;text-align:center}
+    .hmc-val{font-family:'Montserrat',sans-serif;font-weight:900;font-size:1.3rem;color:var(--yellow);line-height:1}
+    .hmc-lbl{font-size:11px;color:rgba(255,255,255,0.75);font-weight:600;margin-top:4px;letter-spacing:0.3px}
+    .citation{font-size:12px;color:rgba(255,255,255,0.6);line-height:1.65;padding-top:1.25rem;border-top:1px solid rgba(255,255,255,0.1);font-style:italic}
+    .nav{background:var(--navy-mid);border-bottom:3px solid var(--cobalt);display:flex;padding:0 2rem;position:relative;top:0;z-index:100;overflow-x:auto}
+    .nav-tab{padding:0.9rem 1.25rem;font-size:11px;font-weight:700;font-family:'Montserrat',sans-serif;color:rgba(255,255,255,0.45);border:none;background:none;cursor:pointer;border-bottom:3px solid transparent;margin-bottom:-3px;transition:all 0.2s;white-space:nowrap;letter-spacing:0.8px;text-transform:uppercase}
+    .nav-tab.active{color:var(--white);border-bottom-color:var(--yellow)}
+    .nav-tab:hover:not(.active){color:rgba(255,255,255,0.75)}
+    .nav-tab:focus{outline:3px solid var(--yellow);outline-offset:2px}
+    .panel{display:none;padding:2rem;min-height:600px}
+    .panel.active{display:block}
+    #panel-setup{display:block}
+    .card{background:var(--white);border:1px solid var(--border);border-radius:12px;padding:1.75rem;margin-bottom:1.25rem}
+    .card-head{display:flex;align-items:center;gap:10px;margin-bottom:1.25rem}
+    .card-rule{width:4px;height:20px;background:var(--cobalt);border-radius:2px;flex-shrink:0}
+    .card-head h3{font-family:'Montserrat',sans-serif;font-weight:700;font-size:14px;color:var(--text-primary)}
+    .form-grid{display:grid;grid-template-columns:1fr 1fr;gap:1rem}
+    .fg{display:flex;flex-direction:column;gap:6px}
+    .fg label{font-size:11px;font-weight:700;color:var(--text-muted);text-transform:uppercase;letter-spacing:0.8px}
+    .fg input,.fg select{padding:11px 14px;border:2px solid var(--border);border-radius:8px;font-size:14px;font-family:'Open Sans',sans-serif;color:var(--text-primary);background:var(--offwhite);transition:border 0.2s,box-shadow 0.2s}
+    .fg input:focus,.fg select:focus{outline:none;border-color:var(--cobalt);box-shadow:0 0 0 3px rgba(61,106,181,0.2);background:white}
+    .role-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:8px;margin-top:0.25rem}
+    .role-btn{padding:11px 8px;border:2px solid var(--border);border-radius:8px;font-size:12px;font-weight:700;font-family:'Montserrat',sans-serif;cursor:pointer;background:white;color:var(--text-muted);transition:all 0.2s;text-align:center}
+    .role-btn:hover{border-color:var(--cobalt);color:var(--cobalt)}
+    .role-btn.selected{background:var(--navy);color:white;border-color:var(--navy)}
+    .btn-primary{background:var(--cobalt);color:white;border:2px solid var(--cobalt);padding:12px 28px;border-radius:8px;font-size:13px;font-weight:700;font-family:'Montserrat',sans-serif;cursor:pointer;transition:all 0.2s;letter-spacing:0.5px}
+    .btn-primary:hover{background:var(--cobalt-dark)}
+    .btn-primary:focus{outline:3px solid var(--yellow);outline-offset:3px}
+    .btn-outline{background:white;color:var(--text-primary);border:2px solid var(--border);padding:11px 22px;border-radius:8px;font-size:13px;font-weight:700;font-family:'Montserrat',sans-serif;cursor:pointer;transition:all 0.2s}
+    .btn-outline:hover{border-color:var(--cobalt);color:var(--cobalt)}
+    .btn-yellow{background:var(--yellow);color:var(--navy);border:2px solid var(--yellow);padding:12px 28px;border-radius:8px;font-size:13px;font-weight:700;font-family:'Montserrat',sans-serif;cursor:pointer;transition:all 0.2s}
+    .btn-yellow:hover{background:#E0B530}
+    .prog-bar-wrap{background:var(--navy);border-radius:12px;padding:1.25rem 1.75rem;margin-bottom:1.25rem;display:flex;align-items:center;gap:1.25rem}
+    .prog-lbl{font-family:'Montserrat',sans-serif;font-size:12px;font-weight:700;color:white;white-space:nowrap;min-width:110px}
+    .prog-track{flex:1;height:6px;background:rgba(255,255,255,0.12);border-radius:3px;overflow:hidden}
+    .prog-fill{height:100%;background:var(--yellow);border-radius:3px;transition:width 0.4s ease}
+    .prog-pct{font-size:12px;color:rgba(255,255,255,0.5);white-space:nowrap;min-width:70px;text-align:right}
+    .dim-block{background:white;border:1px solid var(--border);border-radius:12px;margin-bottom:1.25rem;overflow:hidden}
+    .dim-hdr{background:var(--navy);padding:1.25rem 1.75rem;display:flex;align-items:flex-start;gap:14px}
+    .dim-badge{background:var(--cobalt);color:white;font-family:'Montserrat',sans-serif;font-weight:800;font-size:10px;padding:5px 10px;border-radius:6px;letter-spacing:1px;flex-shrink:0;margin-top:2px}
+    .dim-badge.pre{background:var(--yellow);color:var(--navy)}
+    .dim-hdr h3{font-family:'Montserrat',sans-serif;font-weight:700;font-size:15px;color:white;line-height:1.2}
+    .dim-hdr p{font-size:12px;color:rgba(255,255,255,0.6);margin-top:3px}
+    .scale-leg{display:flex;justify-content:space-between;padding:0.65rem 1.75rem;background:var(--surface);border-bottom:1px solid var(--border);font-size:11px;color:var(--text-muted);font-weight:600;font-family:'Montserrat',sans-serif;gap:4px;flex-wrap:wrap}
+    .items-list{padding:0}
+    .item-row{padding:1.2rem 1.75rem;border-bottom:1px solid var(--border);display:grid;grid-template-columns:1fr auto;gap:1.25rem;align-items:center}
+    .item-row:last-child{border-bottom:none}
+    .item-text{font-size:14px;color:var(--text-primary);line-height:1.55}
+    .item-meta{font-size:11px;color:var(--text-muted);margin-top:4px;font-weight:600;font-family:'Montserrat',sans-serif}
+    .likert{display:flex;gap:5px}
+    .lbtn{width:40px;height:40px;border-radius:8px;border:2px solid var(--border);background:var(--offwhite);cursor:pointer;font-size:13px;font-weight:700;font-family:'Montserrat',sans-serif;color:var(--text-muted);transition:all 0.15s;display:flex;align-items:center;justify-content:center;flex-shrink:0}
+    .lbtn:hover{border-color:var(--cobalt);color:var(--cobalt);background:rgba(61,106,181,0.06)}
+    .lbtn.sel{background:var(--cobalt);border-color:var(--cobalt);color:white}
+    .survey-nav{display:flex;justify-content:space-between;align-items:center;padding:1.5rem 0 0}
+    .scale-hint{font-size:12px;color:var(--text-muted);text-align:center;font-weight:500}
+    /* TEASER RESULT */
+    .teaser-wrap{padding:2rem}
+    .teaser-banner{background:var(--navy);border-radius:12px;padding:2.5rem 2rem;margin-bottom:1.25rem;text-align:center;position:relative;overflow:hidden}
+    .teaser-banner::before{content:'';position:absolute;right:-40px;top:-40px;width:180px;height:180px;border:36px solid rgba(61,106,181,0.12);border-radius:50%}
+    .teaser-banner h2{font-family:'Montserrat',sans-serif;font-weight:900;font-size:1.4rem;color:white;margin-bottom:0.5rem;position:relative;z-index:2}
+    .teaser-banner p{font-size:13px;color:rgba(255,255,255,0.55);margin-bottom:1.5rem;position:relative;z-index:2}
+    .overall-ring{width:120px;height:120px;border-radius:50%;border:4px solid var(--yellow);display:flex;flex-direction:column;align-items:center;justify-content:center;margin:0 auto 1.5rem;background:rgba(245,200,66,0.06);position:relative;z-index:2}
+    .overall-ring .big{font-family:'Montserrat',sans-serif;font-size:34px;font-weight:900;color:white;line-height:1}
+    .overall-ring .sm{font-size:11px;color:rgba(255,255,255,0.5);margin-top:2px;font-weight:600}
+    .traffic-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:10px;margin-bottom:1.5rem;position:relative;z-index:2}
+    .traffic-box{border-radius:10px;padding:1rem;text-align:center}
+    .traffic-box .tv{font-family:'Montserrat',sans-serif;font-size:28px;font-weight:900;line-height:1}
+    .traffic-box .tl{font-size:11px;font-weight:700;margin-top:4px;text-transform:uppercase;letter-spacing:0.5px}
+    .t-green{background:rgba(29,185,84,0.15);border:1px solid rgba(29,185,84,0.3)}.t-green .tv,.t-green .tl{color:#1DB954}
+    .t-amber{background:rgba(245,200,66,0.12);border:1px solid rgba(245,200,66,0.3)}.t-amber .tv,.t-amber .tl{color:var(--yellow)}
+    .t-red{background:rgba(185,28,28,0.15);border:1px solid rgba(185,28,28,0.3)}.t-red .tv,.t-red .tl{color:#EF4444}
+    .teaser-cta{background:white;border-radius:12px;padding:2rem;text-align:center;margin-bottom:1.25rem}
+    .teaser-cta h3{font-family:'Montserrat',sans-serif;font-weight:800;font-size:1.1rem;color:var(--navy);margin-bottom:0.75rem}
+    .teaser-cta p{font-size:14px;color:var(--text-secondary);line-height:1.7;margin-bottom:1.5rem;max-width:500px;margin-left:auto;margin-right:auto}
+    .teaser-cta .btn-primary{font-size:14px;padding:14px 36px}
+    .locked-msg{background:var(--surface);border:1px solid var(--border);border-radius:10px;padding:1.25rem;text-align:center;margin-bottom:1rem}
+    .locked-msg p{font-size:13px;color:var(--text-muted);line-height:1.6}
+    .locked-icon{font-size:24px;margin-bottom:8px}
+    /* FULL REPORT */
+    .report-banner{background:var(--navy);border-radius:12px;padding:2rem 2.25rem 1.75rem;margin-bottom:1.25rem;position:relative;overflow:hidden}
+    .rb-deco{position:absolute;right:-40px;top:-40px;width:180px;height:180px;border:36px solid rgba(61,106,181,0.12);border-radius:50%}
+    .rb-top{display:flex;justify-content:space-between;align-items:flex-start;margin-bottom:1.25rem;position:relative;z-index:2}
+    .rb-top h2{font-family:'Montserrat',sans-serif;font-weight:900;font-size:1.5rem;color:white;margin-bottom:4px}
+    .rb-top p{font-size:12px;color:rgba(255,255,255,0.6)}
+    .score-ring{width:84px;height:84px;border-radius:50%;border:3px solid var(--yellow);display:flex;flex-direction:column;align-items:center;justify-content:center;flex-shrink:0;background:rgba(245,200,66,0.06)}
+    .score-ring .big{font-family:'Montserrat',sans-serif;font-size:26px;font-weight:900;color:white;line-height:1}
+    .score-ring .sm{font-size:10px;color:rgba(255,255,255,0.55);margin-top:2px;font-weight:600;font-family:'Montserrat',sans-serif}
+    .rb-chips{display:flex;gap:8px;flex-wrap:wrap;position:relative;z-index:2}
+    .r-chip{background:rgba(61,106,181,0.22);border:1px solid rgba(61,106,181,0.4);color:#A8C3F0;font-size:10px;font-weight:700;font-family:'Montserrat',sans-serif;padding:3px 10px;border-radius:20px;letter-spacing:0.5px}
+    .results-grid{display:grid;grid-template-columns:1fr 1fr;gap:1.25rem;margin-bottom:1.25rem}
+    .result-card{background:white;border:1px solid var(--border);border-radius:12px;padding:1.5rem}
+    .result-card h4{font-family:'Montserrat',sans-serif;font-size:10px;font-weight:700;color:var(--text-muted);text-transform:uppercase;letter-spacing:1.2px;margin-bottom:1rem}
+    .dim-row{display:flex;align-items:center;gap:8px;margin-bottom:8px}
+    .dim-row-name{font-size:12px;color:var(--text-primary);flex:1;line-height:1.25;font-weight:500}
+    .dim-track{width:65px;height:5px;background:var(--surface);border-radius:3px;overflow:hidden;flex-shrink:0}
+    .dim-fill{height:100%;border-radius:3px;transition:width 0.7s ease}
+    .fill-hi{background:var(--success-text)}.fill-mid{background:var(--cobalt)}.fill-lo{background:#B91C1C}
+    .dim-val{font-family:'Montserrat',sans-serif;font-size:12px;font-weight:700;color:var(--text-primary);min-width:26px;text-align:right;flex-shrink:0}
+    .full-w{grid-column:1/-1}
+    .chart-wrap{position:relative;width:100%;height:320px}
+    .toggle-row{display:flex;gap:6px;margin-bottom:1rem}
+    .toggle-btn{padding:5px 14px;border-radius:20px;border:2px solid var(--border);font-size:11px;font-weight:700;font-family:'Montserrat',sans-serif;cursor:pointer;background:white;color:var(--text-muted);transition:all 0.2s}
+    .toggle-btn.on{background:var(--navy);color:white;border-color:var(--navy)}
+    .ai-card{background:white;border:1px solid var(--border);border-radius:12px;padding:1.75rem;margin-bottom:1.25rem}
+    .ai-card-head{display:flex;align-items:center;gap:10px;margin-bottom:1.25rem}
+    .ai-card-head h4{font-family:'Montserrat',sans-serif;font-size:10px;font-weight:700;color:var(--text-muted);text-transform:uppercase;letter-spacing:1.2px}
+    .pill-ai{background:var(--info-bg);color:var(--info-text);font-size:10px;font-weight:700;font-family:'Montserrat',sans-serif;padding:2px 8px;border-radius:4px}
+    .pill-dgc{background:var(--navy);color:#A8C3F0;font-size:10px;font-weight:700;font-family:'Montserrat',sans-serif;padding:2px 8px;border-radius:4px}
+    .pill-yr{background:var(--yellow);color:var(--navy);font-size:10px;font-weight:700;font-family:'Montserrat',sans-serif;padding:2px 8px;border-radius:4px}
+    .narr-body{font-size:14px;line-height:1.85;color:var(--text-secondary)}
+    .narr-body p{margin-bottom:1rem}
+    .loading-dots{display:inline-flex;gap:4px;align-items:center}
+    .loading-dots span{width:7px;height:7px;border-radius:50%;background:var(--cobalt);animation:db 1.2s infinite}
+    .loading-dots span:nth-child(2){animation-delay:0.2s}
+    .loading-dots span:nth-child(3){animation-delay:0.4s}
+    @keyframes db{0%,80%,100%{transform:scale(0.5);opacity:0.3}40%{transform:scale(1);opacity:1}}
+    .rec-item{display:flex;gap:14px;margin-bottom:1.25rem;padding-bottom:1.25rem;border-bottom:1px solid var(--border)}
+    .rec-item:last-child{border-bottom:none;margin-bottom:0;padding-bottom:0}
+    .rec-pri{font-size:10px;font-weight:700;font-family:'Montserrat',sans-serif;padding:4px 10px;border-radius:5px;height:fit-content;flex-shrink:0;letter-spacing:0.5px;white-space:nowrap}
+    .p-high{background:var(--danger-bg);color:var(--danger-text)}.p-med{background:var(--warn-bg);color:var(--warn-text)}.p-str{background:var(--success-bg);color:var(--success-text)}
+    .rec-body h5{font-family:'Montserrat',sans-serif;font-size:14px;font-weight:700;color:var(--text-primary);margin-bottom:4px}
+    .rec-body p{font-size:13px;color:var(--text-secondary);line-height:1.65}
+    .bench-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:10px;margin-top:1rem}
+    .bench-box{text-align:center;padding:1.25rem 1rem;background:var(--offwhite);border-radius:10px;border:1px solid var(--border)}
+    .bench-box .bv{font-family:'Montserrat',sans-serif;font-size:26px;font-weight:900;color:var(--navy)}
+    .bench-box .bl{font-size:10px;color:var(--text-muted);margin-top:3px;font-weight:700;text-transform:uppercase;letter-spacing:0.8px;font-family:'Montserrat',sans-serif}
+    .bench-box .bc{font-size:12px;font-weight:700;margin-top:6px;font-family:'Montserrat',sans-serif}
+    .c-above{color:var(--success-text)}.c-below{color:#B91C1C}.c-at{color:var(--warn-text)}
+    /* FACILITATOR VIEW */
+    .fac-lock{background:var(--navy);border-radius:12px;padding:2rem;text-align:center;margin:0 0 2rem 0;min-height:300px;display:flex;flex-direction:column;align-items:center;justify-content:center}
+    .fac-lock h3{font-family:'Montserrat',sans-serif;font-weight:800;font-size:1.1rem;color:white;margin-bottom:0.5rem}
+    .fac-lock p{font-size:13px;color:rgba(255,255,255,0.55);margin-bottom:1.25rem;line-height:1.6}
+    .fac-lock-row{display:flex;gap:8px;max-width:360px;margin:0 auto}
+    .fac-lock-row input{flex:1;padding:10px 14px;border:2px solid rgba(255,255,255,0.15);border-radius:8px;font-size:14px;font-family:'Open Sans',sans-serif;background:rgba(255,255,255,0.08);color:white}
+    .fac-lock-row input::placeholder{color:rgba(255,255,255,0.3)}
+    .fac-lock-row input:focus{outline:none;border-color:var(--yellow)}
+    .fac-lock-err{font-size:12px;color:#EF4444;margin-top:8px}
+    .fac-input-card{background:white;border-radius:12px;padding:1.75rem;margin-bottom:1.25rem}
+    .fac-input-card h4{font-family:'Montserrat',sans-serif;font-size:11px;font-weight:700;color:var(--text-muted);text-transform:uppercase;letter-spacing:1px;margin-bottom:1rem}
+    .fac-grid{display:grid;grid-template-columns:repeat(2,1fr);gap:10px}
+    .fac-item{display:flex;flex-direction:column;gap:4px}
+    .fac-item label{font-size:11px;font-weight:600;color:var(--text-muted)}
+    .fac-item input{padding:8px 10px;border:1.5px solid var(--border);border-radius:6px;font-size:13px;font-family:'Open Sans',sans-serif;color:var(--text-primary);background:var(--offwhite);width:100%}
+    .fac-item input:focus{outline:none;border-color:var(--cobalt)}
+    .cite-strip{background:var(--navy);border-radius:10px;padding:1rem 1.5rem;margin-bottom:1.25rem}
+    .cite-strip .cite-label{font-family:'Montserrat',sans-serif;font-size:10px;font-weight:700;color:var(--yellow);text-transform:uppercase;letter-spacing:1px;display:block;margin-bottom:4px}
+    .cite-strip .cite-text{font-size:11px;color:rgba(255,255,255,0.5);line-height:1.7;font-style:italic}
+    .cite-strip a{color:rgba(255,255,255,0.65);text-decoration:underline;font-style:normal}
+    .purpose-card{background:var(--navy);border-radius:12px;padding:2rem 2.25rem;margin-bottom:1.25rem;position:relative;overflow:hidden}
+    .purpose-card::before{content:'';position:absolute;right:-40px;top:-40px;width:160px;height:160px;border:32px solid rgba(61,106,181,0.15);border-radius:50%}
+    .purpose-card::after{content:'';position:absolute;left:60%;bottom:-50px;width:110px;height:110px;border:22px solid rgba(245,200,66,0.08);border-radius:50%}
+    .purpose-card h2{font-family:'Montserrat',sans-serif;font-weight:800;font-size:1.15rem;color:var(--white);margin-bottom:0.85rem;position:relative;z-index:2}
+    .purpose-card h2 span{color:var(--yellow)}
+    .purpose-lead{font-size:14px;color:rgba(255,255,255,0.9);line-height:1.75;margin-bottom:1.25rem;position:relative;z-index:2}
+    .purpose-cols{display:grid;grid-template-columns:1fr 1fr;gap:1rem;position:relative;z-index:2}
+    .purpose-col{background:rgba(255,255,255,0.06);border:1px solid rgba(255,255,255,0.1);border-radius:10px;padding:1.1rem 1.25rem}
+    .purpose-col h4{font-family:'Montserrat',sans-serif;font-size:11px;font-weight:700;color:var(--yellow);text-transform:uppercase;letter-spacing:1px;margin-bottom:0.65rem}
+    .purpose-col ul{list-style:none;padding:0}
+    .purpose-col ul li{font-size:13px;color:rgba(255,255,255,0.8);line-height:1.55;padding:0.3rem 0;padding-left:1.1rem;position:relative}
+    .purpose-col ul li::before{content:'→';position:absolute;left:0;color:var(--cobalt-light);font-size:11px;top:0.35rem}
+    .email-status{text-align:center;padding:0.75rem;border-radius:8px;font-size:13px;font-weight:600;font-family:'Montserrat',sans-serif;margin-top:1rem;display:none}
+    .email-ok{background:var(--success-bg);color:var(--success-text)}
+    .email-fail{background:var(--danger-bg);color:var(--danger-text)}
+    @media(max-width:640px){
+      /* Layout */
+      .results-grid,.fac-grid,.purpose-cols{grid-template-columns:1fr}
+      .form-grid{grid-template-columns:1fr}
+      .role-grid{grid-template-columns:1fr 1fr}
+      .header-meta-grid{grid-template-columns:repeat(2,1fr)}
+      .traffic-grid{grid-template-columns:repeat(3,1fr)}
+      .bench-grid{grid-template-columns:repeat(3,1fr)}
+      .item-row{grid-template-columns:1fr;gap:0.75rem}
+      .fac-lock-row{flex-direction:column}
+      /* Typography */
+      .hdr-title{font-size:1.4rem;line-height:1.15}
+      .hdr-desc{font-size:13px}
+      .scale-leg{display:none}
+      /* Header */
+      .header-inner{padding:1.5rem 1.25rem 1.75rem}
+      .brand-name{font-size:12px}
+      /* Nav — scrollable on mobile */
+      .nav{padding:0 0.5rem}
+      .nav-tab{padding:0.8rem 0.75rem;font-size:10px;letter-spacing:0.5px}
+      /* Panels */
+      .panel{padding:1rem}
+      /* Cards */
+      .card{padding:1.25rem}
+      .purpose-card{padding:1.5rem 1.25rem}
+      /* Likert scale — bigger touch targets on mobile */
+      .lbtn{width:44px;height:44px;font-size:14px}
+      .likert{gap:4px}
+      /* Survey items */
+      .item-text{font-size:13px}
+      .item-row{padding:1rem 1rem}
+      /* Teaser */
+      .overall-ring{width:100px;height:100px}
+      .overall-ring .big{font-size:28px}
+      .teaser-cta{padding:1.5rem 1.25rem}
+      /* Report */
+      .report-banner{padding:1.5rem 1.25rem}
+      .rb-top{flex-direction:column;gap:1rem}
+      .score-ring{align-self:flex-start}
+      /* Facilitator */
+      .fac-grid{grid-template-columns:1fr}
+      /* Bio section */
+      .bio-grid{grid-template-columns:1fr!important}
+      /* Submit wrap */
+      #submit-wrap .btn-yellow{width:100%;padding:16px 24px}
+      /* Footer */
+      footer > div{flex-direction:column;gap:1rem}
+      footer > div > div:last-child{text-align:left}
+    }
+    @media(max-width:380px){
+      .hdr-title{font-size:1.2rem}
+      .lbtn{width:38px;height:38px;font-size:12px}
+      .nav-tab{padding:0.75rem 0.5rem;font-size:9px}
+      .header-meta-grid{grid-template-columns:repeat(2,1fr)}
+    }
+  </style>
+</head>
+<body>
+<div class="app" id="app-top">
+
+  <header class="header">
+    <div class="header-topbar"></div>
+    <div class="header-inner">
+      <div class="hd1" aria-hidden="true"></div>
+      <div class="hd2" aria-hidden="true"></div>
+      <div class="brand-row">
+        <svg class="dgc-mark" viewBox="0 0 48 48" fill="none" xmlns="http://www.w3.org/2000/svg" aria-label="DGC logo">
+          <circle cx="24" cy="24" r="20" stroke="#5584D4" stroke-width="2.2" fill="none"/>
+          <line x1="10" y1="38" x2="38" y2="10" stroke="#5584D4" stroke-width="2.2" stroke-linecap="round"/>
+          <line x1="18" y1="30" x2="34" y2="14" stroke="#5584D4" stroke-width="2.2" stroke-linecap="round"/>
+          <polyline points="24,14 34,14 34,24" stroke="#5584D4" stroke-width="2.2" fill="none" stroke-linecap="round" stroke-linejoin="round"/>
+          <line x1="30" y1="18" x2="14" y2="34" stroke="#5584D4" stroke-width="2.2" stroke-linecap="round"/>
+          <polyline points="24,34 14,34 14,24" stroke="#5584D4" stroke-width="2.2" fill="none" stroke-linecap="round" stroke-linejoin="round"/>
+        </svg>
+        <div>
+          <div class="brand-name">DGC</div>
+          <div class="brand-sub">Daniel Groenewald Consulting</div>
+        </div>
+      </div>
+      <div class="hdr-title">High Performing Teams <span class="accent">Assessment</span></div>
+      <div class="hdr-desc">This is a research-based instrument for measuring the 12 characteristics and 2 preconditions of high-performing school teams. Designed for use by school leadership teams as part of a structured team development process facilitated by Daniel Groenewald Consulting.</div>
+      <div class="header-meta-grid">
+        <div class="header-meta-card"><div class="hmc-val">14</div><div class="hmc-lbl">Dimensions</div></div>
+        <div class="header-meta-card"><div class="hmc-val">28</div><div class="hmc-lbl">Survey Items</div></div>
+        <div class="header-meta-card"><div class="hmc-val">1</div><div class="hmc-lbl">Session</div></div>
+        <div class="header-meta-card"><div class="hmc-val">AI</div><div class="hmc-lbl">Generated Report</div></div>
+      </div>
+      <div class="citation">&copy; 2026 Daniel Groenewald Consulting. All rights reserved. &nbsp;·&nbsp; Based on: Groenewald, D., Lavery, S. &amp; O'Neill, M. (2025). Teams matter: Characteristics of senior leadership in high-performing Western Australian Catholic schools. <em>Issues in Educational Research, 35</em>(1), 181–198. www.iier.org.au/iier35/groenewald.pdf</div>
+    </div>
+  </header>
+
+  <nav class="nav" aria-label="Assessment sections">
+    <button class="nav-tab active" onclick="showPanel('setup',this)">Setup</button>
+    <button class="nav-tab" onclick="showPanel('survey',this)">Survey</button>
+    <button class="nav-tab" id="tab-results" onclick="showPanel('results',this)">My Results</button>
+    <button class="nav-tab" onclick="showPanel('facilitator',this)">Facilitator View</button>
+  </nav>
+
+  <main>
+
+  <!-- SETUP -->
+  <div class="panel active" id="panel-setup" style="display:block">
+    <!-- INSTRUCTION BANNER -->
+    <div style="background:white;border:1px solid var(--border);border-radius:12px;padding:1.5rem 1.75rem;margin-bottom:1.25rem;display:flex;align-items:flex-start;gap:1.25rem">
+      <div style="flex-shrink:0;width:44px;height:44px;border-radius:50%;background:var(--cobalt);display:flex;align-items:center;justify-content:center">
+        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg>
+      </div>
+      <div>
+        <div style="font-family:'Montserrat',sans-serif;font-weight:700;font-size:14px;color:var(--text-primary);margin-bottom:6px">Before you begin</div>
+        <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:12px;margin-bottom:10px" class="instruction-grid">
+          <div style="text-align:center;padding:10px;background:var(--offwhite);border-radius:8px">
+            <div style="font-family:'Montserrat',sans-serif;font-weight:900;font-size:1.1rem;color:var(--cobalt)">14</div>
+            <div style="font-size:11px;color:var(--text-muted);margin-top:2px">dimensions</div>
+          </div>
+          <div style="text-align:center;padding:10px;background:var(--offwhite);border-radius:8px">
+            <div style="font-family:'Montserrat',sans-serif;font-weight:900;font-size:1.1rem;color:var(--cobalt)">28</div>
+            <div style="font-size:11px;color:var(--text-muted);margin-top:2px">questions</div>
+          </div>
+          <div style="text-align:center;padding:10px;background:var(--offwhite);border-radius:8px">
+            <div style="font-family:'Montserrat',sans-serif;font-weight:900;font-size:1.1rem;color:var(--cobalt)">~10</div>
+            <div style="font-size:11px;color:var(--text-muted);margin-top:2px">minutes</div>
+          </div>
+        </div>
+        <p style="font-size:13px;color:var(--text-secondary);line-height:1.65">As team leader, rate each statement based on your honest assessment of how your team currently operates. There are no right or wrong answers — only an accurate picture of where your team is right now. Complete in one sitting as responses are not saved. Your results go directly to Dr Daniel Groenewald as the starting point for your debrief conversation.</p>
+      </div>
+    </div>
+
+    <div class="purpose-card">
+      <h2>Is your team <span>performing at its best?</span></h2>
+      <p class="purpose-lead">This is a research-based instrument for helping team leaders to assess their teams. It is based on my research into high-performing teams in secondary schools. It will give you an insight into where your team is strong and where it needs work.</p>
+      <p style="font-size:13px;color:rgba(255,255,255,0.75);margin-bottom:1.5rem;position:relative;z-index:2;line-height:1.75">Take the assessment to find out — and please feel welcome to reach out for coaching, or professional development with your team.</p>
+      <div style="position:relative;z-index:2;margin-bottom:1.5rem;background:rgba(245,200,66,0.1);border:1px solid rgba(245,200,66,0.25);border-radius:10px;padding:1rem 1.25rem;display:flex;align-items:center;gap:12px">
+        <div style="font-size:24px;flex-shrink:0">🏆</div>
+        <p style="font-family:'Montserrat',sans-serif;font-weight:700;font-size:14px;color:var(--yellow);line-height:1.5;margin:0">Remember — school leadership is a team sport. You can't go it alone.</p>
+      </div>
+      <div class="purpose-cols" style="margin-bottom:1.5rem">
+        <div class="purpose-col">
+          <h4>What this gives you</h4>
+          <ul>
+            <li>A clear picture of where your team is strong</li>
+            <li>An honest view of where it needs work</li>
+            <li>A research-based framework — not guesswork</li>
+            <li>A starting point for a real conversation</li>
+          </ul>
+        </div>
+        <div class="purpose-col">
+          <h4>What comes next</h4>
+          <ul>
+            <li>A debrief with Daniel to unpack your results</li>
+            <li>Coaching tailored to your team's specific profile</li>
+            <li>Professional development that addresses real gaps</li>
+            <li>Growth tracked over time — not a one-off exercise</li>
+          </ul>
+        </div>
+      </div>
+      <div style="border-top:1px solid rgba(255,255,255,0.1);padding-top:1.25rem;position:relative;z-index:2;display:grid;grid-template-columns:auto 1fr;gap:1.25rem;align-items:flex-start;margin-bottom:1.25rem">
+        <div style="width:52px;height:52px;border-radius:50%;background:var(--cobalt);border:2px solid rgba(255,255,255,0.2);display:flex;align-items:center;justify-content:center;flex-shrink:0">
+          <span style="font-family:'Montserrat',sans-serif;font-weight:900;font-size:15px;color:white">DG</span>
+        </div>
+        <div>
+          <div style="font-family:'Montserrat',sans-serif;font-weight:700;font-size:14px;color:white;margin-bottom:2px">Dr Daniel Groenewald</div>
+          <div style="font-size:11px;color:var(--yellow);font-weight:600;letter-spacing:0.5px;margin-bottom:0.75rem;text-transform:uppercase">Leadership &amp; Learning Development Consultant</div>
+          <p style="font-size:13px;color:rgba(255,255,255,0.7);line-height:1.7;margin-bottom:0.6rem">An educational leadership specialist with over 20 years of experience developing leaders, teams, and organisations across school systems. His doctoral research examined the attributes of high-performing teams in Catholic secondary schools.</p>
+        </div>
+      </div>
+
+    </div>
+
+    <div class="card">
+      <div class="card-head"><div class="card-rule"></div><h3>About You and Your Team</h3></div>
+      <div class="form-grid">
+        <div class="fg"><label for="rname">Your Name (Team Leader)</label><input type="text" id="rname" placeholder="e.g. Sarah Mitchell" autocomplete="name"></div>
+        <div class="fg"><label for="school">School / Organisation</label><input type="text" id="school" placeholder="e.g. St Catherine's College"></div>
+        <div class="fg"><label for="tname">Team Name</label><input type="text" id="tname" placeholder="e.g. Senior Leadership Team"></div>
+        <div class="fg"><label for="sdate">Date</label><input type="date" id="sdate"></div>
+        <div class="fg"><label for="target">Team Being Assessed</label><input type="text" id="target" placeholder="Name of the team you are rating"></div>
+        <div class="fg"><label for="tsize">Team Size</label>
+          <select id="tsize">
+            <option value="">Select...</option>
+            <option>2–5 members</option><option>6–10 members</option>
+            <option>11–20 members</option><option>20+ members</option>
+          </select>
+        </div>
+      </div>
+    </div>
+    <input type="hidden" id="rrole" value="Team Leader">
+    <div style="display:flex;justify-content:flex-end">
+      <button class="btn-primary" onclick="startSurvey()">Begin Assessment →</button>
+    </div>
+  </div>
+
+  <!-- SURVEY -->
+  <div class="panel" id="panel-survey" style="display:none">
+    <div class="prog-bar-wrap">
+      <div class="prog-lbl" id="prog-lbl">Section 1 of 14</div>
+      <div class="prog-track"><div class="prog-fill" id="prog-fill" style="width:4%"></div></div>
+      <div class="prog-pct" id="prog-pct">0 of 28 items</div>
+    </div>
+    <div id="survey-content"></div>
+    <div id="section-warning" style="display:none;background:#FEE2E2;color:#7F1D1D;padding:0.75rem 1.25rem;border-radius:8px;font-size:13px;font-weight:600;font-family:'Montserrat',sans-serif;margin-bottom:0.75rem;text-align:center">Please rate at least one item in this section before continuing.</div>
+    <div class="survey-nav">
+      <button class="btn-outline" id="btn-prev" onclick="prevSec()" style="visibility:hidden">← Previous</button>
+      <div class="scale-hint">1 = Rarely evident &nbsp;·&nbsp; 5 = Fully embedded</div>
+      <button class="btn-primary" id="btn-next" onclick="nextSec()">Next →</button>
+      <div id="submit-wrap" style="display:none;margin-top:1.25rem">
+      <div style="background:var(--navy);border-radius:12px;padding:2rem;text-align:center">
+        <p style="font-family:'Montserrat',sans-serif;font-weight:700;font-size:15px;color:white;margin-bottom:0.5rem">You have reached the end of the assessment.</p>
+        <p style="font-size:13px;color:rgba(255,255,255,0.55);margin-bottom:1.5rem;line-height:1.6">Click Submit to send your results to Dr Daniel Groenewald and see your overview.</p>
+        <button class="btn-yellow" onclick="completeSurvey()" style="font-size:15px;padding:14px 48px;font-weight:900">Submit Assessment →</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- CLIENT RESULTS — teaser only -->
+  <div class="panel" id="panel-results" style="display:none">
+    <div class="teaser-wrap" style="padding:0">
+
+      <div class="teaser-banner">
+        <div class="rb-deco" aria-hidden="true"></div>
+        <div style="font-size:10px;letter-spacing:2px;color:rgba(255,255,255,0.4);font-weight:700;font-family:'Montserrat',sans-serif;margin-bottom:8px;position:relative;z-index:2">HPTA · TEAM DIAGNOSTIC SNAPSHOT</div>
+        <h2>Thank you, <span id="teaser-name">—</span></h2>
+        <p style="margin-bottom:1.5rem">Your team assessment has been submitted. Here is your initial snapshot.</p>
+        <div style="display:flex;align-items:center;justify-content:center;gap:1.5rem;flex-wrap:wrap;position:relative;z-index:2;margin-bottom:1.5rem">
+          <div class="overall-ring" style="margin:0">
+            <span class="big" id="teaser-score">—</span>
+            <span class="sm">/ 5.0</span>
+          </div>
+          <div style="text-align:left">
+            <div style="font-size:12px;color:rgba(255,255,255,0.5);margin-bottom:0.6rem">Overall score across 14 dimensions</div>
+            <div class="traffic-grid" style="grid-template-columns:repeat(3,auto);gap:8px">
+              <div class="traffic-box t-green" style="padding:8px 12px"><div class="tv" id="t-above">—</div><div class="tl">Above</div></div>
+              <div class="traffic-box t-amber" style="padding:8px 12px"><div class="tv" id="t-at">—</div><div class="tl">At standard</div></div>
+              <div class="traffic-box t-red" style="padding:8px 12px"><div class="tv" id="t-below">—</div><div class="tl">Below</div></div>
+            </div>
+            <div style="font-size:10px;color:rgba(255,255,255,0.25);margin-top:6px">Minimum standard: 3 / 5 across all dimensions</div>
+          </div>
+        </div>
+
+        <!-- PERSONALISED INSIGHT -->
+        <div id="teaser-insight" style="position:relative;z-index:2;margin-top:1.25rem;background:rgba(255,255,255,0.06);border:1px solid rgba(255,255,255,0.12);border-radius:12px;padding:1.25rem;display:none">
+          <div style="font-family:'Montserrat',sans-serif;font-size:10px;font-weight:700;color:var(--yellow);text-transform:uppercase;letter-spacing:1px;margin-bottom:1rem;text-align:center">Your Team Snapshot</div>
+          <div style="display:grid;grid-template-columns:1fr 1fr;gap:10px">
+            <div style="background:rgba(29,185,84,0.12);border:1px solid rgba(29,185,84,0.25);border-radius:10px;padding:1rem;text-align:center">
+              <div style="font-size:10px;font-weight:700;color:#1DB954;font-family:'Montserrat',sans-serif;text-transform:uppercase;letter-spacing:0.5px;margin-bottom:6px">Greatest Strength</div>
+              <div id="insight-strength-name" style="font-size:14px;font-weight:700;color:white;font-family:'Montserrat',sans-serif;margin-bottom:4px">—</div>
+              <div id="insight-strength-score" style="font-size:22px;font-weight:900;color:#1DB954;font-family:'Montserrat',sans-serif;line-height:1">—</div>
+              <div style="font-size:10px;color:rgba(255,255,255,0.35);margin-top:2px">out of 5.0</div>
+            </div>
+            <div style="background:rgba(239,68,68,0.12);border:1px solid rgba(239,68,68,0.25);border-radius:10px;padding:1rem;text-align:center">
+              <div style="font-size:10px;font-weight:700;color:#EF4444;font-family:'Montserrat',sans-serif;text-transform:uppercase;letter-spacing:0.5px;margin-bottom:6px">Growth Opportunity</div>
+              <div id="insight-growth-name" style="font-size:14px;font-weight:700;color:white;font-family:'Montserrat',sans-serif;margin-bottom:4px">—</div>
+              <div id="insight-growth-score" style="font-size:22px;font-weight:900;color:#EF4444;font-family:'Montserrat',sans-serif;line-height:1">—</div>
+              <div style="font-size:10px;color:rgba(255,255,255,0.35);margin-top:2px">out of 5.0</div>
+            </div>
+          </div>
+          <p style="font-size:11px;color:rgba(255,255,255,0.35);text-align:center;margin-top:0.75rem;line-height:1.6">Your full dimension-by-dimension profile will be presented in your debrief session</p>
+        </div>
+
+        <!-- TEASER RADAR — enhanced -->
+        <div style="position:relative;z-index:2;margin-top:1.5rem;background:rgba(255,255,255,0.04);border:1px solid rgba(255,255,255,0.12);border-radius:16px;padding:1.5rem 1.25rem 1rem;overflow:hidden">
+          <div style="position:absolute;top:0;left:0;right:0;height:2px;background:linear-gradient(90deg,transparent,rgba(245,200,66,0.5),transparent)"></div>
+          <div style="font-family:'Montserrat',sans-serif;font-size:10px;font-weight:700;color:var(--yellow);text-transform:uppercase;letter-spacing:1.5px;margin-bottom:0.5rem;text-align:center">Your Team's Diagnostic Profile</div>
+          <div style="font-size:11px;color:rgba(255,255,255,0.4);text-align:center;margin-bottom:1rem">14 dimensions · unlabelled until your debrief</div>
+          <div style="position:relative;width:100%;height:300px">
+            <canvas id="teaserRadar"></canvas>
+          </div>
+          <div style="display:flex;justify-content:center;gap:20px;margin-top:0.75rem;padding-bottom:0.25rem;flex-wrap:wrap">
+            <div style="display:flex;align-items:center;gap:6px;font-size:11px;color:rgba(255,255,255,0.4)">
+              <div style="width:10px;height:10px;border-radius:50%;background:rgba(245,200,66,0.6)"></div>
+              Your team now
+            </div>
+            <div style="display:flex;align-items:center;gap:6px;font-size:11px;color:rgba(255,255,255,0.4)">
+              <div style="width:10px;height:2px;border-radius:1px;background:rgba(61,106,181,0.8)"></div>
+              Minimum standard (3.0)
+            </div>
+          </div>
+          <p style="font-size:11px;color:rgba(255,255,255,0.25);text-align:center;margin-top:0.5rem;line-height:1.6;font-style:italic">Full dimension labels and scores revealed in your debrief session with Dr Daniel Groenewald</p>
+        </div>
+      </div>
+
+      <!-- AI TEASER NARRATIVE -->
+      <div class="ai-card" id="teaser-narrative-card" style="display:none;margin-top:1.25rem">
+        <div class="ai-card-head">
+          <div class="card-rule"></div>
+          <h4>Initial Observations</h4>
+          <span class="pill-ai">AI</span>
+          <span class="pill-dgc">DGC</span>
+        </div>
+        <div class="narr-body" id="teaser-narrative">
+          <div class="loading-dots"><span></span><span></span><span></span></div>&nbsp; Generating your initial observations…
+        </div>
+        <div style="background:var(--surface);border-radius:10px;padding:1.25rem;margin-top:1.25rem;border-left:4px solid var(--cobalt)">
+          <p style="font-family:'Montserrat',sans-serif;font-size:11px;font-weight:700;color:var(--cobalt);text-transform:uppercase;letter-spacing:1px;margin-bottom:6px">Why a debrief matters</p>
+          <p style="font-size:13px;color:var(--text-secondary);line-height:1.7">These initial observations are based on your scores alone. A facilitated debrief with Dr Daniel Groenewald goes much further — exploring <em>why</em> these patterns exist, what they mean in your specific school context, and how to act on them. The conversation is where the real insight lives.</p>
+        </div>
+      </div>
+
+      <div class="teaser-cta">
+        <div style="font-size:32px;margin-bottom:0.75rem">🔒</div>
+        <h3>This is the Start of Something</h3>
+        <p>Your data has been received. Dr Daniel Groenewald will be in touch to arrange a debrief — where we unpack your team's results, identify the highest-leverage development opportunities, and begin designing a professional learning program tailored to where your team is right now.</p>
+        <button class="btn-outline" onclick="showPrintSection()" style="font-size:13px;padding:12px 24px;display:flex;align-items:center;gap:8px;margin:1.5rem auto 0">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="6 9 6 2 18 2 18 9"/><path d="M6 18H4a2 2 0 0 1-2-2v-5a2 2 0 0 1 2-2h16a2 2 0 0 1 2 2v5a2 2 0 0 1-2 2h-2"/><rect x="6" y="14" width="12" height="8"/></svg>
+            Save / Print My Results
+          </button>
+
+        <!-- INLINE CONTACT FORM -->
+        <div style="margin-top:1.5rem;padding-top:1.5rem;border-top:1px solid var(--border)">
+          <div style="font-family:'Montserrat',sans-serif;font-weight:700;font-size:15px;color:var(--text-primary);margin-bottom:0.4rem">Request your debrief session</div>
+          <p style="font-size:13px;color:var(--text-muted);margin-bottom:1.25rem;line-height:1.6">Leave your details and Dr Daniel Groenewald will be in touch to arrange a time.</p>
+          <div style="display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:10px" class="contact-grid">
+            <div class="fg"><label for="cf-name">Your Name</label><input type="text" id="cf-name" placeholder="e.g. Sarah Mitchell"></div>
+            <div class="fg"><label for="cf-school">School</label><input type="text" id="cf-school" placeholder="e.g. St Catherine's College"></div>
+            <div class="fg" style="grid-column:1/-1"><label for="cf-msg">Anything you'd like Daniel to know?</label><textarea id="cf-msg" placeholder="Optional — preferred times, specific questions, context about your team..." style="padding:11px 14px;border:2px solid var(--border);border-radius:8px;font-size:14px;font-family:'Open Sans',sans-serif;color:var(--text-primary);background:var(--offwhite);width:100%;min-height:80px;resize:vertical;transition:border 0.2s"></textarea></div>
+          </div>
+          <button class="btn-primary" onclick="submitContactForm()" style="width:100%;font-size:14px;padding:13px" id="cf-submit">Send Request →</button>
+          <div id="cf-status" style="display:none;margin-top:0.75rem;padding:0.75rem 1rem;border-radius:8px;font-size:13px;font-weight:600;font-family:'Montserrat',sans-serif;text-align:center"></div>
+        </div>
+        <p style="font-size:12px;color:var(--text-muted);margin-top:1rem">Dr Groenewald has received your assessment results and will be in touch shortly.</p>
+      </div>
+
+      <!-- 90-DAY GROWTH CARD -->
+      <div style="background:var(--navy);border-radius:12px;padding:1.5rem;margin-top:1.25rem;display:flex;align-items:flex-start;gap:1rem;position:relative;overflow:hidden">
+        <div style="position:absolute;top:0;left:0;right:0;height:2px;background:linear-gradient(90deg,var(--cobalt),var(--yellow),var(--cobalt))"></div>
+        <div style="width:48px;height:48px;border-radius:50%;background:rgba(245,200,66,0.15);border:2px solid rgba(245,200,66,0.3);display:flex;align-items:center;justify-content:center;flex-shrink:0;margin-top:2px">
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#F5C842" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="23 6 13.5 15.5 8.5 10.5 1 18"/><polyline points="17 6 23 6 23 12"/></svg>
+        </div>
+        <div>
+          <div style="font-family:'Montserrat',sans-serif;font-weight:700;font-size:13px;color:white;margin-bottom:4px">Growth is measured over time</div>
+          <p style="font-size:12px;color:rgba(255,255,255,0.6);line-height:1.7">High-performing teams don't develop in a single session. The most successful teams we work with reassess every 90 days — tracking real growth across all 14 dimensions and adjusting their development program as the team evolves. Your data today is the baseline. The journey starts here.</p>
+        </div>
+      </div>
+
+      <div style="display:none">
+        <div id="email-status" style="display:none;margin-top:1rem;padding:0.75rem 1rem;border-radius:8px;font-size:13px;font-weight:600;font-family:'Montserrat',sans-serif;line-height:1.5"></div>
+      </div>
+
+      <!-- SHARE PROMPT -->
+      <div style="background:white;border:1px solid var(--border);border-radius:12px;padding:1.25rem 1.5rem;margin-top:1.25rem;display:flex;align-items:center;justify-content:space-between;gap:1rem;flex-wrap:wrap">
+        <div>
+          <div style="font-family:'Montserrat',sans-serif;font-weight:700;font-size:13px;color:var(--text-primary);margin-bottom:3px">Know another team leader who'd benefit?</div>
+          <div style="font-size:12px;color:var(--text-muted)">Share this diagnostic with a colleague — it's free and takes 10 minutes.</div>
+        </div>
+        <div style="display:flex;gap:8px;flex-wrap:wrap">
+          <a href="mailto:?subject=Team diagnostic tool worth trying&body=I just completed this research-based team diagnostic and thought you might find it useful for your team. It takes about 10 minutes: https://danielgroenewaldconsulting.com.au/team-assessment" style="text-decoration:none">
+            <button class="btn-outline" style="font-size:12px;padding:8px 16px;display:flex;align-items:center;gap:6px">
+              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"/><polyline points="22,6 12,12 2,6"/></svg>
+              Share via Email
+            </button>
+          </a>
+          <button class="btn-outline" onclick="copyShareLink()" style="font-size:12px;padding:8px 16px;display:flex;align-items:center;gap:6px" id="copy-btn">
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="9" y="9" width="13" height="13" rx="2" ry="2"/><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/></svg>
+            Copy Link
+          </button>
+        </div>
+      </div>
+
+      <!-- IN-PAGE PRINT SECTION -->
+      <div id="print-section" style="display:none;background:white;border:1px solid var(--border);border-radius:12px;padding:1.75rem;margin-top:1.25rem">
+        <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:1.25rem;flex-wrap:wrap;gap:1rem">
+          <h3 style="font-family:'Montserrat',sans-serif;font-weight:700;font-size:14px;color:var(--text-primary)">Your Results Summary</h3>
+          <div style="display:flex;gap:8px">
+            <button class="btn-primary" onclick="window.print()" style="font-size:12px;padding:8px 18px">Print / Save as PDF</button>
+            <button class="btn-outline" onclick="document.getElementById('print-section').style.display='none'" style="font-size:12px;padding:8px 14px">Close</button>
+          </div>
+        </div>
+        <div id="print-content" style="font-size:13px;line-height:1.7;color:var(--text-secondary)"></div>
+      </div>
+
+    </div>
+  </div>
+
+  <!-- FACILITATOR VIEW — password protected -->
+  <div class="panel" id="panel-facilitator" style="display:none">
+
+    <!-- LOCK SCREEN -->
+    <div id="fac-lock-screen">
+      <div class="fac-lock">
+        <div style="font-size:36px;margin-bottom:0.75rem">🔐</div>
+        <h3>Facilitator Access</h3>
+        <p>This view is for Dr Daniel Groenewald only. Enter your facilitator password to access the full report generator.</p>
+        <div class="fac-lock-row">
+          <input type="password" id="fac-password" placeholder="Enter password" onkeydown="if(event.key==='Enter')checkPassword()">
+          <button class="btn-yellow" onclick="checkPassword()">Enter</button>
+        </div>
+        <div class="fac-lock-err" id="fac-err" style="display:none">Incorrect password. Please try again.</div>
+      </div>
+    </div>
+
+    <!-- FULL REPORT — shown after password -->
+    <div id="fac-report" style="display:none;padding:0">
+
+      <div style="background:var(--navy);border-radius:12px;padding:1.25rem 1.75rem;margin-bottom:1.25rem;display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:1rem">
+        <div>
+          <div style="font-size:10px;letter-spacing:2px;color:rgba(255,255,255,0.4);font-weight:700;font-family:'Montserrat',sans-serif;margin-bottom:4px">DGC · TEAM DIAGNOSTIC REPORT</div>
+          <div style="font-family:'Montserrat',sans-serif;font-weight:700;font-size:14px;color:white" id="fac-client-name">No client loaded</div>
+        </div>
+        
+      </div>
+
+      <!-- AUTO LOAD -->
+      <div class="fac-input-card">
+        <h4>Load Client Submission</h4>
+        <p style="font-size:12px;color:var(--text-muted);margin-bottom:1rem;line-height:1.6">Click below to load the most recent submission from this session, then generate the full report.</p>
+        <div id="fac-score-inputs" style="display:none"></div>
+        <div id="fac-no-data" style="background:var(--warn-bg);color:var(--warn-text);padding:0.75rem 1rem;border-radius:8px;font-size:13px;font-weight:600;margin-bottom:1rem;display:none">No submission found in this session. Please open the Facilitator View in the same browser session as the client submission.</div>
+        <button class="btn-primary" onclick="autoLoadAndGenerate()" style="width:100%">Load &amp; Generate Full Report →</button>
+      </div>
+
+      <!-- FULL REPORT OUTPUT -->
+      <div id="fac-report-output" style="display:none">
+        <div class="report-banner">
+          <div class="rb-deco" aria-hidden="true"></div>
+          <div class="rb-top">
+            <div>
+              <div style="font-size:10px;letter-spacing:2px;color:rgba(255,255,255,0.4);font-weight:700;font-family:'Montserrat',sans-serif;margin-bottom:8px">HPTA · FACILITATOR REPORT</div>
+              <h2 id="fac-r-title">Client Report</h2>
+              <p id="fac-r-sub"></p>
+            </div>
+            <div style="text-align:center">
+              <div style="font-size:10px;color:rgba(255,255,255,0.4);font-weight:700;font-family:'Montserrat',sans-serif;margin-bottom:8px;letter-spacing:1px">OVERALL</div>
+              <div class="score-ring"><span class="big" id="fac-overall">—</span><span class="sm">/ 5.0</span></div>
+            </div>
+          </div>
+        </div>
+
+        <div class="results-grid">
+          <div class="result-card"><h4>Dimension Scores</h4><div id="fac-dim-scores"></div></div>
+          <div class="result-card">
+            <h4>Standard Comparison</h4>
+            <p style="font-size:12px;color:var(--text-secondary);margin-bottom:0.75rem;line-height:1.6">Minimum standard: 3.0 / 5.0 across all 14 dimensions.</p>
+            <div class="bench-grid">
+              <div class="bench-box"><div class="bv" id="fac-b-your">—</div><div class="bl">Overall Score</div></div>
+              <div class="bench-box"><div class="bv">3.0</div><div class="bl">Minimum Standard</div></div>
+              <div class="bench-box"><div class="bv" id="fac-b-at">—</div><div class="bl">At Standard</div><div class="bc" id="fac-b-cmp"></div></div>
+            </div>
+          </div>
+          <div class="result-card full-w">
+            <h4>Radar Profile</h4>
+            <div class="chart-wrap"><canvas id="facRadarChart"></canvas></div>
+          </div>
+        </div>
+
+        <div class="ai-card">
+          <div class="ai-card-head"><div class="card-rule"></div><h4>Narrative Interpretation</h4><span class="pill-ai">AI</span><span class="pill-dgc">DGC</span></div>
+          <div class="narr-body" id="fac-narrative"><p style="color:var(--text-muted)">Click Generate Full Report to create the narrative.</p></div>
+        </div>
+        <div class="ai-card">
+          <div class="ai-card-head"><div class="card-rule"></div><h4>Development Recommendations</h4><span class="pill-yr">Priorities</span><span class="pill-dgc">DGC</span></div>
+          <div id="fac-recs"><p style="color:var(--text-muted);font-size:14px">Click Generate Full Report to create recommendations.</p></div>
+        </div>
+
+
+      </div>
+    </div>
+  </div>
+
+  </main>
+
+  <footer style="padding:2rem;font-size:12px;color:var(--text-muted);border-top:1px solid var(--border);margin-top:2rem">
+    <div style="max-width:940px;margin:0 auto;display:flex;justify-content:space-between;align-items:flex-start;gap:2rem;flex-wrap:wrap">
+      <div>
+        <p style="font-family:'Montserrat',sans-serif;font-weight:700;color:var(--text-secondary);margin-bottom:4px;font-size:13px">High Performing Teams Assessment (HPTA)</p>
+<p style="font-style:italic;color:var(--text-muted);line-height:1.65;max-width:560px">Adapted from: Groenewald, D., Lavery, S. &amp; O'Neill, M. (2025). Teams matter: Characteristics of senior leadership in high-performing Western Australian Catholic schools. <em>Issues in Educational Research, 35</em>(1), 181–198. <a href="http://www.iier.org.au/iier35/groenewald.pdf" target="_blank" rel="noopener" style="color:var(--cobalt);text-decoration:underline;font-weight:600">www.iier.org.au/iier35/groenewald.pdf</a></p>
+      </div>
+      <div style="text-align:right;flex-shrink:0">
+        <p style="font-family:'Montserrat',sans-serif;font-weight:700;color:var(--text-secondary);margin-bottom:4px;font-size:13px">Dr Daniel Groenewald</p>
+        <p style="margin-bottom:2px">Perth, WA &amp; Melbourne, VIC</p>
+        <a href="https://www.danielgroenewaldconsulting.com.au" target="_blank" rel="noopener" style="color:var(--cobalt);text-decoration:none;font-weight:600">danielgroenewaldconsulting.com.au</a>
+      </div>
+    </div>
+  </footer>
+
+</div>
+
+<script>
+// ===== EMAILJS CONFIG =====
+const EJS_SERVICE  = 'service_5fwqocv';
+const EJS_TEMPLATE = 'template_nabi3kx';
+const EJS_KEY      = '7LW3zg08M2reK7SQp';
+const FAC_PASSWORD = 'DGC2025hpta';
+emailjs.init(EJS_KEY);
+
+// ===== DIMENSIONS =====
+const DIMS=[
+  {id:'p1',label:'Shared Vision',desc:'Precondition · Shared direction and purpose',pre:true,items:[
+    'Our team has a clearly articulated shared vision that guides our collective work.',
+    'Our team aligns individual efforts toward a common and inspiring purpose.'
+  ]},
+  {id:'p2',label:'Skilled Team Leadership',desc:'Precondition · Capable and trusted leadership',pre:true,items:[
+    'Our team leader demonstrates the knowledge and skills needed to lead effectively.',
+    'The team leader actively develops the capability of each team member.'
+  ]},
+  {id:'d1',label:'Effective Team Design',desc:'Skilled experts leading their areas',items:[
+    'Team roles are clearly defined and matched to each member's expertise.',
+    'There is an appropriate mix of skills and experience in this team.'
+  ]},
+  {id:'d2',label:'Clear Operating Norms',desc:'Shared meeting and behaviour rules',items:[
+    'Our team has agreed norms guiding how we conduct meetings and interactions.',
+    'Team members consistently uphold our shared behavioural expectations.'
+  ]},
+  {id:'d3',label:'Positive Relationships',desc:'Trust, care, humour, forgiveness',items:[
+    'There is a strong sense of trust and psychological safety in this team.',
+    'When mistakes are made, we respond with understanding rather than blame.'
+  ]},
+  {id:'d4',label:'Emotional Intelligence',desc:'Self-regulation and attunement',items:[
+    'Team members are aware of how their emotions affect others.',
+    'Our team responds to conflict with emotional maturity and relational skill.'
+  ]},
+  {id:'d5',label:'Individual Competence',desc:'Experienced professionals',items:[
+    'Each member brings a high level of professional expertise to their role.',
+    'Members hold themselves accountable to high professional standards.'
+  ]},
+  {id:'d6',label:'Shared Leadership',desc:'Load-sharing, vision-sharing, clarity',items:[
+    'Leadership responsibilities are distributed and shared across team members.',
+    'There is clarity about who is responsible for what within our team.'
+  ]},
+  {id:'d7',label:'Skilled Communication',desc:'Open, kind interactions',items:[
+    'Communication in this team is open, transparent, and timely.',
+    'Difficult topics are raised openly rather than discussed in corridors.'
+  ]},
+  {id:'d8',label:'Shared Time Together',desc:'Positive contact opportunities',items:[
+    'Our team has regular, purposeful opportunities to meet and collaborate.',
+    'We protect time to work together even amid competing demands.'
+  ]},
+  {id:'d9',label:'Middle Leader Engagement',desc:'Development and listening',items:[
+    'Middle leaders in this team feel their voices are genuinely heard.',
+    'Middle leaders take ownership in advancing our shared team goals.'
+  ]},
+  {id:'d10',label:'Compelling Challenge',desc:'Purpose that focuses energy',items:[
+    'Our team is energised by meaningful goals that stretch and inspire us.',
+    'A compelling shared challenge keeps us cohesive and focused.'
+  ]},
+  {id:'d11',label:'Professional Development',desc:'Growth and review',items:[
+    'Professional learning is embedded in our team's regular practice.',
+    'There is a culture of inquiry, experimentation, and learning from evidence.'
+  ]},
+  {id:'d12',label:'Performance Evaluation',desc:'Success and growth review',items:[
+    'Our team regularly reviews progress against our shared goals.',
+    'Honest appraisal of our team's effectiveness is a normal part of how we work.'
+  ]}
+];
+
+let curSec=0,resp={},info={},facChart=null,facUnlocked=false,latestScores=null;
+// Hash-based routing — more reliable in iframes
+function routeToPanel(){
+  var hash = window.location.hash.replace('#','') || 'setup';
+  var validPanels = ['setup','survey','results','facilitator'];
+  if(validPanels.indexOf(hash)===-1) hash='setup';
+  document.querySelectorAll('.panel').forEach(function(el){
+    el.style.display='none';
+    el.classList.remove('active');
+  });
+  document.querySelectorAll('.nav-tab').forEach(function(el){
+    el.classList.remove('active');
+  });
+  var target = document.getElementById('panel-'+hash);
+  if(target){
+    target.style.display='block';
+    target.classList.add('active');
+  }
+  // Highlight correct tab
+  var tabs = document.querySelectorAll('.nav-tab');
+  var tabMap = {setup:0,survey:1,results:2,facilitator:3};
+  if(tabs[tabMap[hash]]) tabs[tabMap[hash]].classList.add('active');
+}
+document.addEventListener('DOMContentLoaded', routeToPanel);
+window.addEventListener('hashchange', routeToPanel);
+
+function showPanel(p,btn){
+  // Hide all panels with inline styles
+  var panels = document.querySelectorAll('.panel');
+  for(var i=0;i<panels.length;i++){
+    panels[i].style.cssText='display:none;';
+    panels[i].classList.remove('active');
+  }
+  // Remove active from all tabs
+  var tabs = document.querySelectorAll('.nav-tab');
+  for(var i=0;i<tabs.length;i++){
+    tabs[i].classList.remove('active');
+  }
+  // Show target panel
+  var target = document.getElementById('panel-'+p);
+  if(target){
+    target.style.display='block';
+    target.classList.add('active');
+  }
+  // Activate tab
+  if(btn) btn.classList.add('active');
+  // Update hash
+  try{ history.replaceState(null,null,'#'+p); }catch(e){}
+  // Scroll to top of app
+  try{
+    var appTop = document.getElementById('app-top');
+    if(appTop) appTop.scrollIntoView({behavior:'instant',block:'start'});
+    window.scrollTo(0,0);
+    window.parent.postMessage({type:'hpta-scrolltop'},'*');
+  }catch(e){}
+}
+
+function selectRole(btn,r){
+  document.querySelectorAll('.role-btn').forEach(b=>b.classList.remove('selected'));
+  btn.classList.add('selected');
+  document.getElementById('rrole').value=r;
+}
+
+function startSurvey(){
+  info={
+    name:document.getElementById('rname').value||'Respondent',
+    school:document.getElementById('school').value||'',
+    team:document.getElementById('tname').value||'Leadership Team',
+    role:document.getElementById('rrole').value||'Team Member',
+    date:document.getElementById('sdate').value||new Date().toISOString().split('T')[0]
+  };
+  curSec=0;
+  showPanel('survey',document.querySelectorAll('.nav-tab')[1]);
+  renderSec();
+}
+
+function renderSec(){
+  const d=DIMS[curSec],tot=DIMS.length,pct=Math.round((curSec/tot)*100);
+  document.getElementById('prog-lbl').textContent='Section '+(curSec+1)+' of '+tot;
+  document.getElementById('prog-fill').style.width=Math.max(4,pct)+'%';
+  document.getElementById('prog-pct').textContent=(curSec*2)+' of 28 items';
+  document.getElementById('btn-prev').style.visibility=curSec===0?'hidden':'visible';
+  document.getElementById('btn-next').textContent='Next →';
+  document.getElementById('btn-next').style.display=curSec===tot-1?'none':'inline-flex';
+  const submitWrap = document.getElementById('submit-wrap');
+  if(submitWrap) submitWrap.style.display = curSec===tot-1 ? 'block' : 'none';
+  let num=d.pre?'PRE':String(curSec-1).padStart(2,'0');
+  let html='<div class="dim-block"><div class="dim-hdr"><div class="dim-badge'+(d.pre?' pre':'')+'">'+num+'</div><div><h3>'+d.label+'</h3><p>'+d.desc+'</p></div></div><div class="scale-leg"><span>1 — Rarely evident</span><span>2 — Sometimes evident</span><span>3 — Often evident</span><span>4 — Consistently evident</span><span>5 — Fully embedded</span></div><div class="items-list">';
+  d.items.forEach((item,i)=>{
+    const k=d.id+'_'+i,v=resp[k];
+    html+='<div class="item-row"><div><div class="item-text">'+item+'</div><div class="item-meta">'+d.label+' · Item '+(i+1)+' of 5</div></div><div class="likert">';
+    for(let s=0;s<=5;s++){html+='<button class="lbtn'+(v===s?' sel':'')+'" onclick="setR(\''+k+'\','+s+',this)">'+s+'</button>';}
+    html+='</div></div>';
+  });
+  html+='</div></div>';
+  document.getElementById('survey-content').innerHTML=html;
+  window.scrollTo(0,0);
+}
+
+function setR(k,v,btn){
+  resp[k]=v;
+  btn.closest('.likert').querySelectorAll('.lbtn').forEach(b=>b.classList.remove('sel'));
+  btn.classList.add('sel');
+}
+
+function nextSec(){
+  // Validation — check at least one item rated in current section
+  var d = DIMS[curSec];
+  var rated = d.items.some(function(_,i){
+    return resp[d.id+'_'+i] !== undefined;
+  });
+  if(!rated){
+    var warn = document.getElementById('section-warning');
+    if(warn){
+      warn.style.display='block';
+      setTimeout(function(){warn.style.display='none';},3000);
+    }
+    return;
+  }
+  if(curSec<DIMS.length-1){curSec++;renderSec();}
+  else{completeSurvey();}
+}
+function prevSec(){if(curSec>0){curSec--;renderSec();}}
+
+function dimScore(id){
+  const d=DIMS.find(x=>x.id===id);if(!d) return null;
+  let tot=0,cnt=0;
+  d.items.forEach((_,i)=>{const v=resp[id+'_'+i];if(v!==undefined){tot+=v;cnt++;}});
+  return cnt>0?(tot/cnt).toFixed(1):null;
+}
+
+function overallScore(scores){
+  let tot=0,cnt=0;
+  scores.forEach(s=>{if(s!==null){tot+=parseFloat(s);cnt++;}});
+  return cnt>0?(tot/cnt).toFixed(1):null;
+}
+
+function completeSurvey(){
+  const scores=DIMS.map(d=>dimScore(d.id));
+  const ov=overallScore(scores);
+
+  // Store for facilitator quick-load
+  latestScores={info:{...info},scores};
+
+  // Populate all teaser fields BEFORE switching panel
+  document.getElementById('teaser-name').textContent=info.name||'there';
+  document.getElementById('teaser-score').textContent=ov||'—';
+
+  const above=scores.filter(s=>s&&parseFloat(s)>3).length;
+  const at=scores.filter(s=>s&&parseFloat(s)===3).length;
+  const below=scores.filter(s=>s&&parseFloat(s)<3).length;
+  document.getElementById('t-above').textContent=above;
+  document.getElementById('t-at').textContent=at;
+  document.getElementById('t-below').textContent=below;
+
+  // Personalised insight — highest and lowest scoring dimension
+  const rated = DIMS.map(function(d,i){return {label:d.label, score:scores[i]?parseFloat(scores[i]):null};}).filter(function(x){return x.score!==null;});
+  if(rated.length>0){
+    const strongest = rated.reduce(function(a,b){return a.score>b.score?a:b;});
+    const weakest   = rated.reduce(function(a,b){return a.score<b.score?a:b;});
+    document.getElementById('insight-strength-name').textContent = strongest.label;
+    document.getElementById('insight-strength-score').textContent = strongest.score.toFixed(1);
+    document.getElementById('insight-growth-name').textContent = weakest.label;
+    document.getElementById('insight-growth-score').textContent = weakest.score.toFixed(1);
+    document.getElementById('teaser-insight').style.display='block';
+  }
+
+  showPanel('results', document.querySelectorAll('.nav-tab')[2]);
+
+  // Render teaser radar — unlabelled, shape only
+  setTimeout(function(){
+    var teaserCanvas = document.getElementById('teaserRadar');
+    if(teaserCanvas){
+      var teaserScores = scores.map(function(s){return s?parseFloat(s):0;});
+      var standardLine = DIMS.map(function(){return 3;});
+      var blankLabels = DIMS.map(function(){return '';});
+      if(window._teaserChart) window._teaserChart.destroy();
+      window._teaserChart = new Chart(teaserCanvas, {
+        type:'radar',
+        data:{
+          labels: blankLabels,
+          datasets:[
+            {
+              label:'Minimum Standard',
+              data: standardLine,
+              backgroundColor:'rgba(61,106,181,0.04)',
+              borderColor:'rgba(61,106,181,0.4)',
+              borderWidth:1.5,
+              borderDash:[4,4],
+              pointRadius:0,
+              pointHoverRadius:0
+            },
+            {
+              label:'Your Team',
+              data: teaserScores,
+              backgroundColor:'rgba(245,200,66,0.18)',
+              borderColor:'rgba(245,200,66,0.85)',
+              borderWidth:2.5,
+              pointRadius:3,
+              pointBackgroundColor:'rgba(245,200,66,0.9)',
+              pointBorderColor:'transparent',
+              pointHoverRadius:5,
+              fill:true
+            }
+          ]
+        },
+        options:{
+          responsive:true,
+          maintainAspectRatio:false,
+          animation:{duration:1200,easing:'easeInOutQuart'},
+          scales:{
+            r:{
+              min:1,
+              max:5,
+              ticks:{
+                stepSize:1,
+                color:'rgba(255,255,255,0.15)',
+                font:{size:9},
+                backdropColor:'transparent'
+              },
+              pointLabels:{display:false},
+              grid:{color:'rgba(255,255,255,0.07)'},
+              angleLines:{color:'rgba(255,255,255,0.07)'}
+            }
+          },
+          plugins:{
+            legend:{display:false},
+            tooltip:{enabled:false}
+          }
+        }
+      });
+    }
+  }, 400);
+
+  // Show teaser narrative card
+  var narrativeCard = document.getElementById('teaser-narrative-card');
+  if(narrativeCard) narrativeCard.style.display='block';
+
+  // Generate teaser AI narrative
+  genTeaserNarrative(scores, ov);
+
+  // Send email
+  sendResultsEmail(scores,ov);
+}
+
+
+
+async function genTeaserNarrative(scores, ov){
+  window._lastScores = scores;
+  window._lastOv = ov;
+  const el = document.getElementById('teaser-narrative');
+  if(!el) return;
+  var countdown = 10;
+  var countdownInterval = setInterval(function(){
+    countdown--;
+    var cd = document.getElementById('narrative-countdown');
+    if(cd && countdown > 0){
+      cd.textContent = 'Generating your observations — about ' + countdown + (countdown===1?' second':' seconds');
+    } else if(countdown <= 0){
+      clearInterval(countdownInterval);
+    }
+  }, 1000);
+  const strong = DIMS.filter(function(_,i){return scores[i]&&parseFloat(scores[i])>=4;}).map(function(d){return d.label;});
+  const dev = DIMS.filter(function(_,i){return scores[i]&&parseFloat(scores[i])<3;}).map(function(d){return d.label;});
+  const dimSum = DIMS.map(function(d,i){return d.label+': '+(scores[i]||'not rated')+'/5';}).join('; ');
+  const prompt = 'You are writing a brief, warm initial observation for a school leadership team that has just completed the High Performing Teams Assessment (HPTA), adapted from the research of Groenewald, Lavery and O'Neill (2025).\n\nTeam: '+info.team+'\nOverall score: '+ov+'/5.0 (minimum standard: 3.0/5.0)\nDimension scores: '+dimSum+'\nStrengths (>=4.0): '+(strong.join(', ')||'None identified')+' \nDimensions below standard (<3.0): '+(dev.join(', ')||'None below standard')+' \n\nWrite exactly 2 short paragraphs:\nParagraph 1: A warm, affirming observation about what the data suggests about this team — acknowledge their strengths specifically by name. Be genuine and encouraging, not generic.\nParagraph 2: Briefly and sensitively name the growth areas. End with a sentence that makes clear these are initial observations only and that a facilitated debrief with Dr Daniel Groenewald will provide the full picture, deeper context, and a practical development pathway.\n\nTone: professional but warm. No bullet points. No markdown. Plain paragraphs only. Keep it concise — 80 words per paragraph maximum.';
+  try{
+    const r = await fetch('https://api.anthropic.com/v1/messages',{
+      method:'POST',
+      headers:{'Content-Type':'application/json'},
+      body:JSON.stringify({model:'claude-sonnet-4-20250514',max_tokens:400,messages:[{role:'user',content:prompt}]})
+    });
+    const d = await r.json();
+    const txt = d.content&&d.content[0]?d.content[0].text:'Unable to generate observations.';
+    el.innerHTML = txt.split('\n\n').filter(function(p){return p.trim();}).map(function(p){return '<p>'+p.trim()+'</p>';}).join('');
+  }catch(e){
+    if(typeof countdownInterval !== 'undefined') clearInterval(countdownInterval);
+    el.innerHTML='<p style="color:var(--text-muted)">Initial observations will be available in your debrief session with Dr Daniel Groenewald.</p><button class="btn-outline" onclick="genTeaserNarrative(window._lastScores,window._lastOv)" style="margin-top:0.75rem;font-size:12px;padding:8px 16px">Try again</button>';
+  }
+}
+
+function submitContactForm(){
+  var name = (document.getElementById('cf-name').value||'').trim();
+  var school = (document.getElementById('cf-school').value||'').trim();
+  var msg = (document.getElementById('cf-msg').value||'').trim();
+  var statusEl = document.getElementById('cf-status');
+  var submitBtn = document.getElementById('cf-submit');
+
+  if(!name){
+    statusEl.style.display='block';
+    statusEl.style.background='#FEE2E2';
+    statusEl.style.color='#7F1D1D';
+    statusEl.textContent='Please enter your name before sending.';
+    return;
+  }
+
+  submitBtn.textContent='Sending...';
+  submitBtn.disabled=true;
+
+  var teamName = (typeof info !== 'undefined') ? (info.team||'') : '';
+  var overallScoreVal = document.getElementById('teaser-score').textContent||'—';
+
+  var params = {
+    to_name: 'Dr Daniel Groenewald',
+    respondent_name: name,
+    respondent_role: 'Debrief Request',
+    school: school||'Not specified',
+    team: teamName||'Not specified',
+    date: new Date().toLocaleDateString('en-AU'),
+    overall_score: overallScoreVal + ' / 5.0',
+    above_standard: document.getElementById('t-above').textContent + ' dimensions',
+    below_standard: document.getElementById('t-below').textContent + ' dimensions',
+    dimension_scores: msg ? 'Message from respondent: ' + msg : 'No additional message',
+    booking_note: 'This is a debrief request submitted via the contact form on the results page.'
+  };
+
+  emailjs.send(EJS_SERVICE, EJS_TEMPLATE, params)
+    .then(function(){
+      statusEl.style.display='block';
+      statusEl.style.background='#D1FAE5';
+      statusEl.style.color='#064E32';
+      statusEl.textContent='Sent! Dr Groenewald will be in touch shortly.';
+      submitBtn.textContent='Sent ✓';
+      submitBtn.style.background='#064E32';
+      document.getElementById('cf-name').value='';
+      document.getElementById('cf-school').value='';
+      document.getElementById('cf-msg').value='';
+    })
+    .catch(function(err){
+      statusEl.style.display='block';
+      statusEl.style.background='#FEE2E2';
+      statusEl.style.color='#7F1D1D';
+      statusEl.textContent='Could not send. Please email danielgroenewald78@gmail.com directly.';
+      submitBtn.textContent='Send Request →';
+      submitBtn.disabled=false;
+    });
+}
+
+function copyShareLink(){
+  var url =  + share_url + ;
+  if(navigator.clipboard){
+    navigator.clipboard.writeText(url).then(function(){
+      var btn = document.getElementById('copy-btn');
+      if(btn){ btn.innerHTML = '<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg> Copied!'; }
+      setTimeout(function(){
+        if(btn){ btn.innerHTML = '<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="9" y="9" width="13" height="13" rx="2" ry="2"/><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/></svg> Copy Link'; }
+      }, 2500);
+    });
+  }
+}
+
+function showPrintSection(){
+  var name = document.getElementById('teaser-name').textContent||'';
+  var score = document.getElementById('teaser-score').textContent||'—';
+  var above = document.getElementById('t-above').textContent||'0';
+  var at = document.getElementById('t-at').textContent||'0';
+  var below = document.getElementById('t-below').textContent||'0';
+  var strengthName = document.getElementById('insight-strength-name').textContent||'—';
+  var strengthScore = document.getElementById('insight-strength-score').textContent||'—';
+  var growthName = document.getElementById('insight-growth-name').textContent||'—';
+  var growthScore = document.getElementById('insight-growth-score').textContent||'—';
+  var narrativeEl = document.getElementById('teaser-narrative');
+  var narrative = narrativeEl ? (narrativeEl.innerText||'') : '';
+  var team = (typeof info !== 'undefined') ? (info.team||'') : '';
+  var school = (typeof info !== 'undefined') ? (info.school||'') : '';
+  var date = (typeof info !== 'undefined') ? (info.date||'') : '';
+
+  var html = '';
+  html += '<div style="background:#0D1525;color:white;padding:20px 24px;border-radius:8px;margin-bottom:16px">';
+  html += '<div style="font-size:16px;font-weight:900;color:white;margin-bottom:8px">High Performing Teams <span style="color:#F5C842">Assessment</span></div>';
+  html += '<div style="font-size:12px;color:rgba(255,255,255,0.6)">' + name + (team?' &middot; '+team:'') + (school?' &middot; '+school:'') + (date?' &middot; '+date:'') + '</div>';
+  html += '<div style="display:flex;align-items:center;gap:16px;margin-top:14px">';
+  html += '<div style="width:60px;height:60px;border-radius:50%;border:3px solid #F5C842;display:flex;flex-direction:column;align-items:center;justify-content:center;flex-shrink:0">';
+  html += '<div style="font-size:20px;font-weight:900;color:white;line-height:1">' + score + '</div>';
+  html += '<div style="font-size:9px;color:rgba(255,255,255,0.45)">/ 5.0</div></div>';
+  html += '<div style="display:grid;grid-template-columns:repeat(3,1fr);gap:8px;flex:1">';
+  html += '<div style="background:rgba(29,185,84,0.15);border-radius:6px;padding:8px;text-align:center"><div style="font-size:18px;font-weight:900;color:#1DB954">'+above+'</div><div style="font-size:9px;font-weight:700;color:#1DB954;text-transform:uppercase">Above</div></div>';
+  html += '<div style="background:rgba(245,200,66,0.12);border-radius:6px;padding:8px;text-align:center"><div style="font-size:18px;font-weight:900;color:#B8860B">'+at+'</div><div style="font-size:9px;font-weight:700;color:#B8860B;text-transform:uppercase">At standard</div></div>';
+  html += '<div style="background:rgba(239,68,68,0.12);border-radius:6px;padding:8px;text-align:center"><div style="font-size:18px;font-weight:900;color:#EF4444">'+below+'</div><div style="font-size:9px;font-weight:700;color:#EF4444;text-transform:uppercase">Below</div></div>';
+  html += '</div></div>';
+  html += '<div style="font-size:10px;color:rgba(255,255,255,0.3);margin-top:8px">Minimum standard: 3 / 5 &middot; All dimensions should reach this threshold</div>';
+  html += '</div>';
+
+  html += '<div style="display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-bottom:16px">';
+  html += '<div style="background:#D1FAE5;border:1px solid #6EE7B7;border-radius:8px;padding:14px;text-align:center">';
+  html += '<div style="font-size:10px;font-weight:700;color:#064E32;text-transform:uppercase;margin-bottom:6px">Greatest Strength</div>';
+  html += '<div style="font-size:13px;font-weight:700;color:#0D1525;margin-bottom:4px">'+strengthName+'</div>';
+  html += '<div style="font-size:20px;font-weight:900;color:#064E32">'+strengthScore+'</div>';
+  html += '<div style="font-size:10px;color:#5A6882;margin-top:2px">out of 5.0</div></div>';
+  html += '<div style="background:#FEE2E2;border:1px solid #FCA5A5;border-radius:8px;padding:14px;text-align:center">';
+  html += '<div style="font-size:10px;font-weight:700;color:#7F1D1D;text-transform:uppercase;margin-bottom:6px">Growth Opportunity</div>';
+  html += '<div style="font-size:13px;font-weight:700;color:#0D1525;margin-bottom:4px">'+growthName+'</div>';
+  html += '<div style="font-size:20px;font-weight:900;color:#7F1D1D">'+growthScore+'</div>';
+  html += '<div style="font-size:10px;color:#5A6882;margin-top:2px">out of 5.0</div></div>';
+  html += '</div>';
+
+  if(narrative.trim()){
+    html += '<div style="background:#F2F5FB;border-radius:8px;padding:16px;margin-bottom:16px">';
+    html += '<div style="font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:1px;color:#5A6882;margin-bottom:10px">Initial Observations</div>';
+    html += '<div style="font-size:13px;line-height:1.75;color:#384565">';
+    narrative.split('\n').filter(function(p){return p.trim();}).forEach(function(p){html+='<p style="margin-bottom:8px">'+p+'</p>';});
+    html += '</div></div>';
+  }
+
+  html += '<div style="border-left:4px solid #3D6AB5;padding:12px 14px;background:#EFF6FF;border-radius:0 8px 8px 0;margin-bottom:16px">';
+  html += '<div style="font-size:11px;font-weight:700;color:#3D6AB5;text-transform:uppercase;letter-spacing:1px;margin-bottom:6px">Your Next Step</div>';
+  html += '<div style="font-size:13px;color:#384565;line-height:1.7">A debrief is your next step — to understand how you and the team are performing, and what you can do to move performance from good to great. Equally, professional development that addresses gaps in team performance will ensure the team learns from its data and improves.</div>';
+  html += '</div>';
+
+  html += '<div style="text-align:center;font-size:11px;color:#5A6882;padding-top:12px;border-top:1px solid #C8D3E8;line-height:1.8">';
+  html += '<strong>High Performing Teams Assessment (HPTA)</strong><br>&copy; 2026 Daniel Groenewald Consulting. All rights reserved.<br>';
+  html += 'Adapted from: Groenewald, D., Lavery, S. &amp; O'Neill, M. (2025). <em>Issues in Educational Research, 35</em>(1), 181–198. &nbsp;&middot;&nbsp; danielgroenewaldconsulting.com.au';
+  html += '</div>';
+
+  document.getElementById('print-content').innerHTML = html;
+  document.getElementById('print-section').style.display = 'block';
+  document.getElementById('print-section').scrollIntoView({behavior:'smooth',block:'start'});
+}
+
+function printTeaserResults(){
+  var name = document.getElementById('teaser-name').textContent||'';
+  var score = document.getElementById('teaser-score').textContent||'—';
+  var above = document.getElementById('t-above').textContent||'0';
+  var at = document.getElementById('t-at').textContent||'0';
+  var below = document.getElementById('t-below').textContent||'0';
+  var strengthName = document.getElementById('insight-strength-name').textContent||'—';
+  var strengthScore = document.getElementById('insight-strength-score').textContent||'—';
+  var growthName = document.getElementById('insight-growth-name').textContent||'—';
+  var growthScore = document.getElementById('insight-growth-score').textContent||'—';
+  var narrativeEl = document.getElementById('teaser-narrative');
+  var narrative = narrativeEl ? narrativeEl.innerText||'' : '';
+  var team = (typeof info !== 'undefined') ? (info.team||'') : '';
+  var school = (typeof info !== 'undefined') ? (info.school||'') : '';
+  var date = (typeof info !== 'undefined') ? (info.date||'') : '';
+
+  var metaLine = name;
+  if(team) metaLine += ' &nbsp;&middot;&nbsp; ' + team;
+  if(school) metaLine += ' &nbsp;&middot;&nbsp; ' + school;
+  if(date) metaLine += ' &nbsp;&middot;&nbsp; ' + date;
+
+  var narrativeHtml = narrative.split('\n').filter(function(p){return p.trim();}).map(function(p){return '<p>'+p+'</p>';}).join('');
+
+  var html = '<!DOCTYPE html><html><head><meta charset="UTF-8">';
+  html += '<title>HPTA Results</title>';
+  html += '<style>';
+  html += '*{box-sizing:border-box;margin:0;padding:0}';
+  html += 'body{font-family:Helvetica Neue,Arial,sans-serif;color:#0D1525;padding:40px;max-width:700px;margin:0 auto}';
+  html += '.header{background:#0D1525;color:white;padding:28px 32px;border-radius:10px;margin-bottom:24px}';
+  html += '.header h1{font-size:22px;font-weight:900;margin-bottom:4px;color:white}';
+  html += '.header h1 span{color:#F5C842}';
+  html += '.meta{font-size:12px;color:rgba(255,255,255,0.6);margin-top:10px;line-height:1.8}';
+  html += '.score-row{display:flex;align-items:center;gap:20px;margin-top:16px}';
+  html += '.score-ring{width:72px;height:72px;border-radius:50%;border:3px solid #F5C842;display:flex;flex-direction:column;align-items:center;justify-content:center;flex-shrink:0}';
+  html += '.score-ring .big{font-size:22px;font-weight:900;color:white;line-height:1}';
+  html += '.score-ring .sm{font-size:10px;color:rgba(255,255,255,0.45);margin-top:2px}';
+  html += '.traffic{display:grid;grid-template-columns:repeat(3,1fr);gap:10px;flex:1}';
+  html += '.traffic-box{border-radius:8px;padding:10px;text-align:center}';
+  html += '.traffic-box .tv{font-size:22px;font-weight:900;line-height:1}';
+  html += '.traffic-box .tl{font-size:10px;font-weight:700;margin-top:3px;text-transform:uppercase}';
+  html += '.t-green{background:rgba(29,185,84,0.15)}.t-green .tv,.t-green .tl{color:#1DB954}';
+  html += '.t-amber{background:rgba(245,200,66,0.12)}.t-amber .tv,.t-amber .tl{color:#B8860B}';
+  html += '.t-red{background:rgba(239,68,68,0.12)}.t-red .tv,.t-red .tl{color:#EF4444}';
+  html += '.section{background:#F2F5FB;border-radius:10px;padding:20px 24px;margin-bottom:16px}';
+  html += '.section h3{font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:1px;color:#5A6882;margin-bottom:14px}';
+  html += '.insight-grid{display:grid;grid-template-columns:1fr 1fr;gap:12px}';
+  html += '.insight-box{border-radius:8px;padding:14px;text-align:center}';
+  html += '.insight-box .label{font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:0.5px;margin-bottom:6px}';
+  html += '.insight-box .dim-name{font-size:13px;font-weight:700;color:#0D1525;margin-bottom:4px}';
+  html += '.insight-box .dim-score{font-size:20px;font-weight:900;line-height:1}';
+  html += '.insight-box .dim-sub{font-size:10px;color:#5A6882;margin-top:2px}';
+  html += '.i-green{background:#D1FAE5;border:1px solid #6EE7B7}.i-green .label,.i-green .dim-score{color:#064E32}';
+  html += '.i-red{background:#FEE2E2;border:1px solid #FCA5A5}.i-red .label,.i-red .dim-score{color:#7F1D1D}';
+  html += '.narrative{font-size:13px;line-height:1.8;color:#384565}';
+  html += '.narrative p{margin-bottom:10px}';
+  html += '.debrief-box{border-left:4px solid #3D6AB5;padding:14px 16px;background:#EFF6FF;border-radius:0 8px 8px 0;margin-bottom:16px}';
+  html += '.debrief-box h4{font-size:11px;font-weight:700;color:#3D6AB5;text-transform:uppercase;letter-spacing:1px;margin-bottom:6px}';
+  html += '.debrief-box p{font-size:13px;color:#384565;line-height:1.7}';
+  html += '.footer{text-align:center;font-size:11px;color:#5A6882;margin-top:24px;padding-top:16px;border-top:1px solid #C8D3E8;line-height:1.8}';
+  html += '@media print{
+  .header,.nav,.teaser-banner,.teaser-cta,.ai-card,.cite-strip,#teaser-narrative-card{display:none!important}
+  #print-section{display:block!important;border:none!important;padding:0!important}
+  .btn-primary,.btn-outline{display:none!important}
+  body{padding:0}
+}';
+  html += '</style></head><body>';
+
+  html += '<div class="header">';
+  html += '<h1>High Performing Teams <span>Assessment</span></h1>';
+  html += '<div class="meta">' + metaLine + '</div>';
+  html += '<div class="score-row">';
+  html += '<div class="score-ring"><span class="big">' + score + '</span><span class="sm">/ 5.0</span></div>';
+  html += '<div class="traffic">';
+  html += '<div class="traffic-box t-green"><div class="tv">' + above + '</div><div class="tl">Above standard</div></div>';
+  html += '<div class="traffic-box t-amber"><div class="tv">' + at + '</div><div class="tl">At standard</div></div>';
+  html += '<div class="traffic-box t-red"><div class="tv">' + below + '</div><div class="tl">Below standard</div></div>';
+  html += '</div></div>';
+  html += '<p style="font-size:10px;color:rgba(255,255,255,0.3);margin-top:10px">Standard = 3.0 / 5.0 &nbsp;&middot;&nbsp; All 14 dimensions should reach this minimum</p>';
+  html += '</div>';
+
+  html += '<div class="section"><h3>Your Team Snapshot</h3>';
+  html += '<div class="insight-grid">';
+  html += '<div class="insight-box i-green"><div class="label">Greatest Strength</div>';
+  html += '<div class="dim-name">' + strengthName + '</div>';
+  html += '<div class="dim-score">' + strengthScore + '</div>';
+  html += '<div class="dim-sub">out of 5.0</div></div>';
+  html += '<div class="insight-box i-red"><div class="label">Growth Opportunity</div>';
+  html += '<div class="dim-name">' + growthName + '</div>';
+  html += '<div class="dim-score">' + growthScore + '</div>';
+  html += '<div class="dim-sub">out of 5.0</div></div>';
+  html += '</div></div>';
+
+  html += '<div class="section"><h3>Initial Observations</h3>';
+  html += '<div class="narrative">' + narrativeHtml + '</div></div>';
+
+  html += '<div class="debrief-box">';
+  html += '<h4>Your Next Step</h4>';
+  html += '<p>A debrief is your next step — to understand how you and the team are performing, and what you can do to move performance from good to great. Equally, professional development that addresses gaps in team performance will ensure the team learns from its data and improves.</p>';
+  html += '</div>';
+
+  html += '<div class="footer">';
+  html += '<strong>High Performing Teams Assessment (HPTA)</strong><br>&copy; 2026 Daniel Groenewald Consulting. All rights reserved.<br>';
+  html += 'Adapted from: Groenewald, D., Lavery, S. &amp; O\'Neill, M. (2025). Teams matter: Characteristics of senior leadership in high-performing Western Australian Catholic schools. <em>Issues in Educational Research, 35</em>(1), 181\u2013198.<br>';
+  html += 'danielgroenewaldconsulting.com.au';
+  html += '</div>';
+  html += '<script>window.onload=function(){window.print();}<\/script>';
+  html += '</body></html>';
+
+  var printWin = window.open('','_blank','width=800,height=900');
+  if(printWin){
+    printWin.document.write(html);
+    printWin.document.close();
+  } else {
+    alert('Please allow pop-ups for this site to print your results.');
+  }
+}
+
+function sendResultsEmail(scores,ov){
+  const dimLines=DIMS.map((d,i)=>{
+    const s=scores[i]||'—';
+    const flag=s!=='—'?(parseFloat(s)>=3?'✓':'⚠ BELOW STANDARD'):'';
+    return d.label+': '+s+'/5 '+flag;
+  }).join('\n');
+
+  const above=scores.filter(s=>s&&parseFloat(s)>3).length;
+  const below=scores.filter(s=>s&&parseFloat(s)<3).length;
+
+  const params={
+    to_name:'Dr Daniel Groenewald',
+    respondent_name:info.name,
+    respondent_role:info.role,
+    school:info.school||'Not specified',
+    team:info.team,
+    date:info.date,
+    overall_score:ov+' / 5.0',
+    above_standard:above+' of 14 dimensions',
+    below_standard:below+' of 14 dimensions',
+    dimension_scores:dimLines,
+    booking_note:'This client has been shown the teaser result and directed to book a debrief session.'
+  };
+
+  const statusEl = document.getElementById('email-status');
+  if(statusEl){
+    statusEl.style.display='block';
+    statusEl.textContent='Sending results to Dr Groenewald...';
+    statusEl.style.background='rgba(61,106,181,0.15)';
+    statusEl.style.color='#3D6AB5';
+  }
+  emailjs.send(EJS_SERVICE,EJS_TEMPLATE,params)
+    .then(function(){
+      console.log('Email sent successfully');
+      if(statusEl){
+        statusEl.textContent='✓ Results sent successfully to Dr Groenewald.';
+        statusEl.style.background='rgba(6,78,50,0.15)';
+        statusEl.style.color='#064E32';
+      }
+    })
+    .catch(function(err){
+      console.error('EmailJS error:', JSON.stringify(err));
+      if(statusEl){
+        statusEl.textContent='Email delivery issue: '+JSON.stringify(err)+'. Please contact daniel@danielgroenewaldconsulting.com.au directly.';
+        statusEl.style.background='rgba(127,29,29,0.12)';
+        statusEl.style.color='#7F1D1D';
+      }
+    });
+}
+
+// ===== FACILITATOR =====
+function checkPassword(){
+  const val=document.getElementById('fac-password').value;
+  if(val===FAC_PASSWORD){
+    document.getElementById('fac-lock-screen').style.display='none';
+    document.getElementById('fac-report').style.display='block';
+    facUnlocked=true;
+    buildFacInputs();
+    if(latestScores) loadFromLatest();
+  } else {
+    document.getElementById('fac-err').style.display='block';
+    document.getElementById('fac-password').value='';
+  }
+}
+
+function buildFacInputs(){
+  const el=document.getElementById('fac-score-inputs');
+  el.innerHTML=DIMS.map(d=>'<div class="fac-item"><label>'+d.label+'</label><input type="number" id="fi_'+d.id+'" min="0" max="5" step="0.1" placeholder="0.0–5.0"></div>').join('');
+  // Client info fields
+  const info_el=document.querySelector('#fac-report .fac-input-card');
+  const infoHtml='<div style="display:grid;grid-template-columns:repeat(3,1fr);gap:8px;margin-bottom:1rem"><div class="fac-item"><label>Client Name</label><input type="text" id="fi_name" placeholder="Name"></div><div class="fac-item"><label>School</label><input type="text" id="fi_school" placeholder="School"></div><div class="fac-item"><label>Team</label><input type="text" id="fi_team" placeholder="Team name"></div></div>';
+  info_el.insertAdjacentHTML('afterbegin',infoHtml);
+}
+
+function autoLoadAndGenerate(){
+  if(!latestScores){
+    document.getElementById('fac-no-data').style.display='block';
+    return;
+  }
+  document.getElementById('fac-no-data').style.display='none';
+  // Set client info
+  document.getElementById('fi_name').value = latestScores.info.name||'';
+  document.getElementById('fi_school').value = latestScores.info.school||'';
+  document.getElementById('fi_team').value = latestScores.info.team||'';
+  // Set scores
+  DIMS.forEach(function(d,i){
+    var el = document.getElementById('fi_'+d.id);
+    if(el && latestScores.scores[i]) el.value = latestScores.scores[i];
+  });
+  generateFacReport();
+}
+
+function loadFromLatest(){
+  if(!latestScores) return;
+  document.getElementById('fi_name').value=latestScores.info.name||'';
+  document.getElementById('fi_school').value=latestScores.info.school||'';
+  document.getElementById('fi_team').value=latestScores.info.team||'';
+  DIMS.forEach((d,i)=>{
+    const el=document.getElementById('fi_'+d.id);
+    if(el&&latestScores.scores[i]) el.value=latestScores.scores[i];
+  });
+  document.getElementById('fac-client-name').textContent='Loaded: '+latestScores.info.name+' — '+latestScores.info.team;
+}
+
+function generateFacReport(){
+  const name=document.getElementById('fi_name').value||'Client';
+  const school=document.getElementById('fi_school').value||'';
+  const team=document.getElementById('fi_team').value||'Team';
+  const scores=DIMS.map(d=>{
+    const v=parseFloat(document.getElementById('fi_'+d.id).value);
+    return isNaN(v)?null:v.toFixed(1);
+  });
+  const ov=overallScore(scores);
+
+  document.getElementById('fac-r-title').textContent=team+' — Full Report';
+  document.getElementById('fac-r-sub').textContent=name+(school?' · '+school:'');
+  document.getElementById('fac-overall').textContent=ov||'—';
+  document.getElementById('fac-b-your').textContent=ov||'—';
+  const atStd=scores.filter(s=>s&&parseFloat(s)>=3).length;
+  const total=scores.filter(s=>s!==null).length;
+  document.getElementById('fac-b-at').textContent=atStd+' / '+total;
+  const diff=ov?parseFloat(ov)-3.0:0;
+  const cmpEl=document.getElementById('fac-b-cmp');
+  cmpEl.textContent=diff>=0?'↑ Above standard':'↓ Below standard';
+  cmpEl.className='bc '+(diff>=0?'c-above':'c-below');
+
+  renderFacDimScores(scores);
+  renderFacRadar(scores);
+  genFacNarrative(scores,ov,name,school,team);
+  genFacRecs(scores);
+
+  document.getElementById('fac-report-output').style.display='block';
+  document.getElementById('fac-client-name').textContent=name+' — '+team;
+}
+
+function barCls(s){const n=parseFloat(s);return n>=4?'fill-hi':n>=2.5?'fill-mid':'fill-lo';}
+
+function renderFacDimScores(scores){
+  document.getElementById('fac-dim-scores').innerHTML=DIMS.map((d,i)=>{
+    const s=scores[i]||'—';const pct=s!=='—'?parseFloat(s)/5*100:0;
+    const flag=s!=='—'&&parseFloat(s)<3?' ⚠':'';
+    return '<div class="dim-row"><div class="dim-row-name">'+d.label+flag+'</div><div class="dim-track"><div class="dim-fill '+barCls(s)+'" style="width:'+pct+'%"></div></div><div class="dim-val">'+s+'</div></div>';
+  }).join('');
+}
+
+function renderFacRadar(scores){
+  const labels=DIMS.map(d=>d.label.length>13?d.label.substring(0,13)+'…':d.label);
+  const sd=scores.map(s=>s?parseFloat(s):0);
+  if(facChart) facChart.destroy();
+  facChart=new Chart(document.getElementById('facRadarChart'),{
+    type:'radar',
+    data:{labels,datasets:[{label:'Score',data:sd,backgroundColor:'rgba(61,106,181,0.12)',borderColor:'#3D6AB5',borderWidth:2.5,pointBackgroundColor:'#3D6AB5',pointRadius:4}]},
+    options:{responsive:true,maintainAspectRatio:false,scales:{r:{min:0,max:5,ticks:{stepSize:1,font:{size:10,family:'Montserrat'},color:'#5A6882'},pointLabels:{font:{size:10,family:'Montserrat',weight:'600'},color:'#0D1525'},grid:{color:'#C8D3E8'},angleLines:{color:'#C8D3E8'}}},plugins:{legend:{display:false}}}
+  });
+}
+
+async function genFacNarrative(scores,ov,name,school,team){
+  const el=document.getElementById('fac-narrative');
+  el.innerHTML='<div class="loading-dots"><span></span><span></span><span></span></div>&nbsp; Generating narrative…';
+  const strong=DIMS.filter((_,i)=>scores[i]&&parseFloat(scores[i])>=4).map(d=>d.label);
+  const dev=DIMS.filter((_,i)=>scores[i]&&parseFloat(scores[i])<3).map(d=>d.label);
+  const dimSum=DIMS.map((d,i)=>d.label+': '+(scores[i]||'not rated')+'/5').join('; ');
+  const prompt='You are writing a professional psychometric narrative report for the High Performing Teams Assessment (HPTA), adapted from the research findings of Groenewald, Lavery and O\'Neill. Write for a senior school leadership context.\n\nClient: '+name+', School: '+(school||'not specified')+', Team: '+team+'\nOverall score: '+ov+'/5.0 (Minimum standard: 3.0/5.0)\nDimension scores: '+dimSum+'\nStrengths (>=4.0): '+(strong.join(', ')||'None identified')+'\nDimensions below standard (<3.0): '+(dev.join(', ')||'None below standard')+'\n\nWrite 4 professional paragraphs for use by the facilitator in a paid debrief session. Paragraph 1: overall picture and context. Paragraph 2: key strengths and what drives them. Paragraph 3: dimensions below the 3/5 standard, named sensitively and constructively. Paragraph 4: affirming, forward-looking close that naturally leads into the DGC development program. Reference specific dimension names. No bullet points. No markdown. Plain paragraphs only.';
+  try{
+    const r=await fetch('https://api.anthropic.com/v1/messages',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({model:'claude-sonnet-4-20250514',max_tokens:1000,messages:[{role:'user',content:prompt}]})});
+    const d=await r.json();
+    const txt=d.content?.[0]?.text||'Unable to generate narrative.';
+    el.innerHTML=txt.split('\n\n').filter(p=>p.trim()).map(p=>'<p>'+p.trim()+'</p>').join('');
+  }catch(e){
+    el.innerHTML='<p style="color:var(--text-muted)">Narrative generation requires an active internet connection.</p>';
+  }
+}
+
+function genFacRecs(scores){
+  const rm={
+    p1:{high:'Invest in structured visioning processes — collaborative workshops build genuine shared direction.',medium:'Revisit your team vision at key points in the year to sustain alignment.',strength:'Your shared vision is foundational. Leverage it explicitly in communications and team rituals.'},
+    p2:{high:'Prioritise leadership capability development through coaching, mentoring, and structured reflection.',medium:'Ensure team leader development is resourced and supported at system level.',strength:'Skilled leadership underpins your team\'s success. Continue modelling collaborative practice.'},
+    d1:{high:'Revisit role clarity and design — ensure expertise is fully utilised and aligned to goals.',medium:'Review team structure at the start of each year for optimal configuration.',strength:'Your team design is well-calibrated. Maintain deliberate role-matching as membership evolves.'},
+    d2:{high:'Co-construct explicit operating norms and establish a regular review and accountability process.',medium:'Strengthen norm reinforcement by naming and affirming expected behaviours.',strength:'Your operating norms are a strength. Share your approach with other teams as a model.'},
+    d3:{high:'Create low-risk connection opportunities and invest deliberate time in relationship-building.',medium:'Introduce relational check-ins and celebrations to deepen trust.',strength:'Your relational culture is exceptional. Protect and actively nurture this as a strategic priority.'},
+    d4:{high:'Build emotional intelligence through structured professional learning — EQ coaching or team reflection.',medium:'Develop team agreements around emotional safety and constructive conflict.',strength:'Your team\'s EI is a significant advantage. Model this healthy culture across the school.'},
+    d5:{high:'Audit individual competencies and provide targeted development support and mentoring.',medium:'Foster peer learning and deliberate knowledge-sharing within the team.',strength:'Individual competence is high. Create structures to cross-pollinate expertise.'},
+    d6:{high:'Implement distributed leadership structures that formally share responsibility and decision-making.',medium:'Invite more members to take visible leadership of specific initiatives.',strength:'Shared leadership is embedded in your culture. Continue distributing and developing capacity.'},
+    d7:{high:'Establish clear communication protocols and model open, kind communication in all team forums.',medium:'Introduce structured dialogue practices to ensure all voices are heard.',strength:'Communication is a genuine strength. Leverage this to accelerate collaboration.'},
+    d8:{high:'Protect and prioritise team meeting and connection time deliberately in scheduling.',medium:'Introduce purposeful informal connection opportunities alongside formal meetings.',strength:'Your use of shared time is effective and intentional. Continue this purposeful design.'},
+    d9:{high:'Create formal feedback loops between middle and senior leaders to improve listening.',medium:'Invest in middle leader development and expand their participation in decisions.',strength:'Middle leader engagement is a key differentiator. Continue to develop them strategically.'},
+    d10:{high:'Identify or reframe a compelling shared challenge to focus collective energy.',medium:'Revisit team goals to ensure they are ambitious, meaningful, and genuinely energising.',strength:'Your compelling challenge is galvanising the team. Refresh goals as they are achieved.'},
+    d11:{high:'Embed structured professional learning into team practice — make reflection part of regular meetings.',medium:'Increase the consistency and practical relevance of professional development.',strength:'PD is deeply embedded in your practice. Share your model with other teams.'},
+    d12:{high:'Introduce regular team performance review processes aligned to shared goals.',medium:'Develop a team dashboard or review protocol to track progress and celebrate milestones.',strength:'Performance evaluation is a strength. Use your review processes to drive ongoing improvement.'}
+  };
+  const ranked=[...DIMS].map((d,i)=>({d,s:scores[i]?parseFloat(scores[i]):null})).filter(x=>x.s!==null).sort((a,b)=>a.s-b.s);
+  const recs=[];
+  ranked.slice(0,2).forEach(x=>recs.push({cls:'p-high',tag:'High Priority',title:x.d.label,text:(rm[x.d.id]||{}).high||'Prioritise deliberate attention to this dimension.'}));
+  ranked.slice(2,4).forEach(x=>recs.push({cls:'p-med',tag:'Focus Area',title:x.d.label,text:(rm[x.d.id]||{}).medium||'Continue developing this dimension systematically.'}));
+  ranked.slice(-2).forEach(x=>recs.push({cls:'p-str',tag:'Sustain & Share',title:x.d.label,text:(rm[x.d.id]||{}).strength||'This is a strength — sustain and share your practice.'}));
+  document.getElementById('fac-recs').innerHTML=recs.map(r=>'<div class="rec-item"><span class="rec-pri '+r.cls+'">'+r.tag+'</span><div class="rec-body"><h5>'+r.title+'</h5><p>'+r.text+'</p></div></div>').join('');
+}
+
+document.getElementById('sdate').value=new Date().toISOString().split('T')[0];
+// Ensure setup panel is active on load
+// Send height to parent for dynamic iframe sizing
+function sendHeight(){
+  const h = Math.max(document.body.scrollHeight, document.documentElement.scrollHeight);
+  window.parent.postMessage({type:'hpta-height',height:h},'*');
+}
+setInterval(sendHeight, 800);
+</script>
+</body>
+</html>
